@@ -15,7 +15,8 @@ class AirlineService {
         return await AppDataSource.createQueryBuilder()
             .select("aircraft")
             .from(Aircraft, "aircraft")
-            .where("id = :id", {id: id})
+            .where("aircraft.id = :id", {id: id})
+            .innerJoinAndSelect("aircraft.airline", "airline")
             .getOne()
     }
 
@@ -31,7 +32,7 @@ class AirlineService {
 
     update = async (id, aircraft) => {
         await AppDataSource.createQueryBuilder()
-            .update(Airline)
+            .update(Aircraft)
             .set({name: aircraft.name, airline: aircraft.airline})
             .where("id = :id", {id: id})
             .execute()
