@@ -4,7 +4,7 @@ import {Seat} from "../entity/Seat";
 import {Row} from "../entity/Row";
 
 class RowService {
-    private seatRepository = AppDataSource.getRepository(Row);
+    private rowRepository = AppDataSource.getRepository(Row);
 
     all = async () => {
         let rows = await AppDataSource.createQueryBuilder()
@@ -14,6 +14,18 @@ class RowService {
             .innerJoinAndSelect('row.class', 'class')
             .getMany()
         return rows
+    }
+
+    save = async (row) => {
+        await this.rowRepository.save(row);
+    }
+
+    update = async (id, row) => {
+        await this.rowRepository.update({id: id}, row);
+    }
+
+    delete = async (id) => {
+        await this.rowRepository.delete({id: id});
     }
 }
 
