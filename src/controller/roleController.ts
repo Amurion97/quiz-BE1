@@ -17,6 +17,51 @@ class RoleController {
             })
         }
     }
+    save = async (req: Request, res: Response) => {
+        try {
+            await roleService.save(req.body);
+            res.status(201).json({
+                success: true,
+                data: 'Add role success!'
+            });
+        } catch (e) {
+            console.log("error in add role:", e)
+            res.status(500).json({
+                message: 'error in add role',
+                success: false
+            })
+        }
+    }
+    update = async (req: Request, res: Response) => {
+        try {
+            await roleService.update(req.params.id, req.body);
+            res.status(201).json({
+                success: true,
+                data: 'update role success!'
+            });
+        } catch (e) {
+            console.log("error in update role:", e)
+            res.status(500).json({
+                message: 'error in update role',
+                success: false
+            })
+        }
+    }
+    delete = async (req: Request, res: Response) => {
+        try {
+            await roleService.delete(req.params.id);
+            res.status(201).json({
+                success: true,
+                data: 'delete role success!'
+            });
+        } catch (e) {
+            console.log("error in delete role:", e)
+            res.status(500).json({
+                message: 'error in delete role',
+                success: false
+            })
+        }
+    }
 }
 
 export default new RoleController();
