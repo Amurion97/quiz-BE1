@@ -19,9 +19,9 @@ export class Flight {
     end: Date;
 
     @ManyToOne(() => Airport)
-    from: number;
+    from: Airport;
     @ManyToOne(() => Airport)
-    to: number;
+    to: Airport;
 
     @Column({
         default: 0

@@ -24,7 +24,7 @@ export class User {
     @Column({type: "varchar", length: 255})
     password: string;
     @ManyToOne(() => Role, (role) => role.users)
-    role: number;
+    role: Role;
 
     @OneToMany(() => Booking, (booking) => booking.user)
     booking: Booking[];

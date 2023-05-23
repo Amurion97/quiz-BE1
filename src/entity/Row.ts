@@ -11,13 +11,13 @@ export class Row {
     name: string;
 
     @ManyToOne(() => Flight, (flight) => flight.rows)
-    flight: number;
+    flight: Flight;
 
     @Column()
     price: number;
 
     @ManyToOne(() => Class)
-    class: number;
+    class: Class;
 
     @OneToMany(() => Seat, (seat) => seat.row)
     seats: Seat[]

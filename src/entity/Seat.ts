@@ -10,7 +10,7 @@ export class Seat {
     no: number;
 
     @ManyToOne(() => Row, (row) => row.seats)
-    row: number;
+    row: Row;
 
     @Column({
         default: 0
@@ -18,5 +18,5 @@ export class Seat {
     isAvailable: boolean;
 
     @OneToOne(() => Booking, (booking) => booking.seat)
-    booking: number
+    booking: Booking
 }

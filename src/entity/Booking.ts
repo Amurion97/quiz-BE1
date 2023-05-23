@@ -9,9 +9,9 @@ export class Booking {
 
     @OneToOne(() => Seat)
     @JoinColumn()
-    seat: number;
+    seat: Seat;
     @ManyToOne(() => User, (user) => user.booking)
-    user: number;
+    user: User;
 
     @Column({
         default: 0
