@@ -1,7 +1,7 @@
 import {AppDataSource} from "../data-source";
 import {Flight} from "../entity/Flight";
 
-class HouseService {
+class FlightService {
     private flightRepository = AppDataSource.getRepository(Flight);
     all = async () => {
         let flights = await AppDataSource.createQueryBuilder()
@@ -17,4 +17,4 @@ class HouseService {
 
 }
 
-export default new HouseService()
+export default new FlightService()
