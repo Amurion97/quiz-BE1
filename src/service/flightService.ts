@@ -12,7 +12,20 @@ class FlightService {
             .innerJoinAndSelect("flight.rows", "rows")
             .innerJoinAndSelect("rows.class", "class")
             .getMany()
+        console.log(flights)
         return flights
+    }
+
+    save = async (flight) => {
+        await this.flightRepository.save(flight);
+    }
+
+    update = async (id, flight) => {
+        await this.flightRepository.update({id: id}, flight);
+    }
+
+    delete = async (id) => {
+        await this.flightRepository.delete({id: id});
     }
 
 }
