@@ -1,7 +1,7 @@
 import {AppDataSource} from "../data-source";
 import {User} from "../entity/User";
 import * as bcrypt from "bcrypt"
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import {SECRET} from "../middleware/auth";
 
 class UserService {
@@ -19,28 +19,27 @@ class UserService {
         await this.userRepository.save(newUser);
     }
     checkUser = async (user) => {
-        let userFind = await this.userRepository.query(`select *
-                                                        from user
-                                                        where username = "${user.username}"`);
-        let usserFinds = userFind[0]
-        console.log(usserFinds)
-        if (usserFinds) {
-            let pass = await bcrypt.compare(user.password, usserFinds.password);
+        let foundUser = await AppDataSource.createQueryBuilder()
+            .select("user")
+            .from(User, "user")
+            .where("user.username = :username", {username: user.username})
+            .innerJoinAndSelect("user.role", "role")
+            .getOne()
+        if (foundUser) {
+            let pass = await bcrypt.compare(user.password, foundUser.password);
             if (pass) {
                 let payload = {
-                    id: usserFinds.id,
-                    username: user.username,
-                    role: usserFinds.roleId
+                    id: foundUser.id,
+                    username: foundUser.username,
+                    role: foundUser.role
                 }
-                console.log(payload)
                 return jwt.sign(payload, SECRET, {
                     expiresIn: 36000 * 10 * 100
                 })
             }
-
-        } else {
-            return 'khong dung pass';
+            return null
         }
+        return null
     }
 
     findUserById = async (userId) => {

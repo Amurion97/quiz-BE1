@@ -60,12 +60,19 @@ class UserController {
     }
     login = async (req: Request, res: Response) => {
         try {
-            let userData = req.body;
-            let user = await userService.checkUser(userData);
-            res.status(200).json(user);
+            let jwt = await userService.checkUser(req.body);
+            if (jwt) {
+                res.status(200).json({
+                    success: true,
+                    data: jwt
+                });
+            } else {
+                throw new Error("Wrong username or password")
+            }
+
         } catch (e) {
-            console.log("error in login")
-            res.status(400).json({
+            console.log("error in login:", e)
+            res.status(500).json({
                 message: 'error in login',
                 success: false
             })

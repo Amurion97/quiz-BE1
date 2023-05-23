@@ -1,6 +1,5 @@
 import {AppDataSource} from "../data-source";
 import {Aircraft} from "../entity/Aircraft";
-import {Airline} from "../entity/Airline";
 
 class AirlineService {
 

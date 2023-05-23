@@ -1,10 +1,10 @@
-import jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
+
 export const SECRET = '123456'
 export const auth = (req, res, next) => {
-    let authorziation = req.headers.authorization
-    if (authorziation) {
+    let authorization = req.headers.authorization
+    if (authorization) {
         let accessToken = req.headers.authorization.split(" ")[1];
-        console.log("accessToken:", accessToken)
         if (accessToken) {
             jwt.verify(accessToken, SECRET, (err, payload) => {
                 if (err) {
@@ -17,7 +17,6 @@ export const auth = (req, res, next) => {
                     console.log("payload:", payload)
                     req.decode = payload;
                     return next();
-
                 }
             })
         } else {
