@@ -9,10 +9,12 @@ class FlightService {
             .from(Flight, "flight")
             .innerJoinAndSelect("flight.aircraft", "aircraft")
             .innerJoinAndSelect("aircraft.airline", "airline")
-            .innerJoinAndSelect("flight.rows", "rows")
-            .innerJoinAndSelect("rows.class", "class")
+            .leftJoinAndSelect("flight.rows", "rows")
+            .innerJoinAndSelect("flight.from", "from")
+            .innerJoinAndSelect("flight.to", "to")
+            .leftJoinAndSelect("rows.class", "class")
+            .orderBy("flight.id")
             .getMany()
-        console.log(flights)
         return flights
     }
 

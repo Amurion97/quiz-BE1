@@ -11,7 +11,7 @@ export class Flight {
     name: string;
 
     @ManyToOne(() => Aircraft, (aircraft) => aircraft.flights)
-    aircraft: number;
+    aircraft: Aircraft;
 
     @Column()
     start: Date;

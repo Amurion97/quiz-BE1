@@ -9,7 +9,7 @@ export class Aircraft {
     @Column()
     name: string;
     @ManyToOne(() => Airline, (airline) => airline.aircraft)
-    airline: number;
+    airline: Airline;
     @OneToMany(() => Flight, (flight) => flight.aircraft)
     flights: Flight[];
 }
