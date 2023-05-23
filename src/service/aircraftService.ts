@@ -1,13 +1,14 @@
 import {AppDataSource} from "../data-source";
 import {Airline} from "../entity/Airline";
+import {Aircraft} from "../entity/Aircraft";
 
 class AirlineService {
-    private airlineRepository = AppDataSource.getRepository(Airline);
+    private aircraftRepository = AppDataSource.getRepository(Aircraft);
 
     all = async () => {
         return await AppDataSource.createQueryBuilder()
-            .select("airline")
-            .from(Airline, "airline")
+            .select("aircraft")
+            .from(Aircraft, "aircraft")
             .getMany()
     }
 }
