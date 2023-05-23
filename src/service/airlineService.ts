@@ -1,11 +1,12 @@
 import {AppDataSource} from "../data-source";
 import {Airport} from "../entity/Airport";
+import {Airline} from "../entity/Airline";
 
 class AirportService {
-    private airportRepository = AppDataSource.getRepository(Airport);
+    private airlineRepository = AppDataSource.getRepository(Airline);
 
     all = async () => {
-        return await this.airportRepository.find()
+        return await this.airlineRepository.find()
     }
 }
 
