@@ -10,6 +10,7 @@ class HouseService {
             .innerJoinAndSelect("flight.aircraft", "aircraft")
             .innerJoinAndSelect("aircraft.airline", "airline")
             .innerJoinAndSelect("flight.rows", "rows")
+            .innerJoinAndSelect("rows.class", "class")
             .getMany()
         return flights
     }
