@@ -5,7 +5,7 @@ import router from "./router/router";
 import * as cors from 'cors';
 
 const hostname = '127.0.0.1';
-const port = 5001;
+const port = 5000;
 
 AppDataSource.initialize().then(async () => {
 

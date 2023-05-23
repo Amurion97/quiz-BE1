@@ -16,4 +16,7 @@ export class Seat {
         default: 0
     })
     isAvailable: boolean;
+
+    @OneToOne(() => Booking, (booking) => booking.seat)
+    booking: number
 }
