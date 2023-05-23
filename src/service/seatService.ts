@@ -1,18 +1,31 @@
 import {AppDataSource} from "../data-source";
-import {Airport} from "../entity/Airport";
 import {Seat} from "../entity/Seat";
+import * as bcrypt from "bcrypt";
 
 class SeatService {
     private seatRepository = AppDataSource.getRepository(Seat);
 
     all = async () => {
-        let seats = await AppDataSource.createQueryBuilder()
+        return await AppDataSource.createQueryBuilder()
             .select('seat')
             .from(Seat, 'seat')
             .innerJoinAndSelect('seat.row', 'row')
             .getMany()
-        return seats
     }
+
+    save = async (seat) => {
+        await this.seatRepository.save(seat);
+    }
+
+    update = async (id, seat) => {
+        await this.seatRepository.update({id: id}, seat);
+    }
+
+    delete = async (id) => {
+        await this.seatRepository.delete({id: id});
+    }
+
+
 }
 
 export default new SeatService();

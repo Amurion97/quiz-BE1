@@ -3,7 +3,6 @@ import {User} from "../entity/User";
 import * as bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 import {SECRET} from "../middleware/auth";
-import {Seat} from "../entity/Seat";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -16,7 +15,7 @@ class UserService {
         newUser.address = user.address;
         newUser.username = user.username;
         newUser.password = hashedPassword;
-        newUser.role = 1;
+        newUser.role = 3;
         await this.userRepository.save(newUser);
     }
     checkUser = async (user) => {
@@ -64,12 +63,11 @@ class UserService {
         return !!(user);
     }
     all = async () => {
-        let users = await AppDataSource.createQueryBuilder()
+        return await AppDataSource.createQueryBuilder()
             .select('user')
             .from(User, 'user')
             .innerJoinAndSelect('user.role', 'role')
-            .getMany()
-        return users;
+            .getMany();
     }
 }
 
