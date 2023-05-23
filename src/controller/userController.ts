@@ -1,5 +1,6 @@
 import userService from "../service/userService";
 import {Request, Response} from "express";
+import seatService from "../service/seatService";
 
 class UserController {
 
@@ -43,7 +44,6 @@ class UserController {
             })
         }
     }
-
     editUser = async (req: Request, res: Response) => {
         try {
             let user = req.body;
@@ -58,8 +58,6 @@ class UserController {
             })
         }
     }
-
-
     login = async (req: Request, res: Response) => {
         try {
             let userData = req.body;
@@ -74,6 +72,21 @@ class UserController {
         }
 
 
+    }
+    all = async (req: Request, res: Response) => {
+        try {
+            let users = await userService.all();
+            res.status(201).json({
+                success: true,
+                data: users
+            });
+        } catch (e) {
+            console.log("error in get all user:", e)
+            res.status(500).json({
+                message: 'error in get all user',
+                success: false
+            })
+        }
     }
 
 }

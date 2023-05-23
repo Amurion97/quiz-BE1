@@ -4,10 +4,10 @@ import seatService from "../service/seatService";
 class SeatController {
     all = async (req: Request, res: Response) => {
         try {
-            let airport = await seatService.all();
+            let seats = await seatService.all();
             res.status(201).json({
                 success: true,
-                data: airport
+                data: seats
             });
         } catch (e) {
             console.log("error in get all seat:", e)
