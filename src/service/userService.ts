@@ -9,14 +9,9 @@ class UserService {
 
     createUser = async (user) => {
         let hashedPassword = bcrypt.hashSync(user.password, 10);
-        let newUser = new User();
-        newUser.name = user.name;
-        newUser.phoneNumber = user.phoneNumber;
-        newUser.address = user.address;
-        newUser.username = user.username;
-        newUser.password = hashedPassword;
-        newUser.role = 3;
-        await this.userRepository.save(newUser);
+        user.password = hashedPassword;
+        user.role = 3;
+        await this.userRepository.save(user);
     }
     checkUser = async (user) => {
         let foundUser = await AppDataSource.createQueryBuilder()
