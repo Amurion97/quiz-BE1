@@ -7,13 +7,13 @@ import {SECRET} from "../middleware/auth";
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
 
-    createUser = async (user) => {
+    save = async (user) => {
         let hashedPassword = bcrypt.hashSync(user.password, 10);
         user.password = hashedPassword;
         user.role = 3;
         await this.userRepository.save(user);
     }
-    checkUser = async (user) => {
+    loginCheck = async (user) => {
         let foundUser = await AppDataSource.createQueryBuilder()
             .select("user")
             .from(User, "user")
@@ -37,7 +37,7 @@ class UserService {
         return null
     }
 
-    findUserById = async (userId) => {
+    one = async (userId) => {
         let userFind = await this.userRepository.findOneBy({
             id: userId
         })

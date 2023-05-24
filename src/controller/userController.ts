@@ -8,7 +8,7 @@ class UserController {
         try {
             let check = await userService.checkUsedUsername(req.body.username)
             if (!check) {
-                await userService.createUser(req.body);
+                await userService.save(req.body);
                 await res.status(201).json({
                     success: true,
                     data: req.body.username
@@ -31,7 +31,7 @@ class UserController {
     showUser = async (req: Request, res: Response) => {
         try {
             let userId = req.params.id;
-            let user = await userService.findUserById(userId)
+            let user = await userService.one(userId)
             res.status(201).json({
                 success: true,
                 data: user
@@ -60,7 +60,7 @@ class UserController {
     }
     login = async (req: Request, res: Response) => {
         try {
-            let jwt = await userService.checkUser(req.body);
+            let jwt = await userService.loginCheck(req.body);
             if (jwt) {
                 res.status(200).json({
                     success: true,
