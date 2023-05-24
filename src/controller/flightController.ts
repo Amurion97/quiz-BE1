@@ -5,7 +5,7 @@ import flightService from "../service/flightService";
 class FlightController {
     all = async (req: Request, res: Response) => {
         try {
-            let flights = await flightService.all()
+            let flights = await flightService.all(req.query)
             res.status(201).json({
                 data: flights,
                 success: true

@@ -15,7 +15,7 @@ export class Flight {
 
     @Column()
     start: Date;
-    @Column()
+    @Column({nullable: true})
     end: Date;
 
     @ManyToOne(() => Airport)
