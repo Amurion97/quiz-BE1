@@ -11,7 +11,9 @@ export const AppDataSource = new DataSource({
     database: "flight2",
     synchronize: true,
     logging: false,
-    entities: ["entity/*.ts"],
+    // entities: ["entity/*.ts"],
+    // entities: [__dirname + '/../**/*.entity.{js,ts}'],
+    entities: [__dirname + '/entity/*.{js,ts}'],
     migrations: [],
     subscribers: [],
 })

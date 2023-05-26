@@ -6,12 +6,16 @@ import * as cors from 'cors';
 
 const hostname = '127.0.0.1';
 const port = 5000;
+const FE_SERVER_PORT = 3000;
 
 AppDataSource.initialize().then(async () => {
 
     // create express app
     const app = express();
-    app.use(cors())
+    app.use(cors({
+        // origin: `http://${hostname}:${FE_SERVER_PORT}`,
+        // credentials: true
+    }))
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
     app.use('', router);

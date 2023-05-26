@@ -5,17 +5,21 @@ import {isNull} from "util";
 
 class FlightService {
     private flightRepository = AppDataSource.getRepository(Flight);
-    all2 = async () => {
+    all2 = async (queries) => {
         let flights = await AppDataSource.createQueryBuilder()
             .select("flight")
             .from(Flight, "flight")
             .innerJoinAndSelect("flight.aircraft", "aircraft")
             .innerJoinAndSelect("aircraft.airline", "airline")
-            .leftJoinAndSelect("flight.rows", "rows")
+            // .leftJoinAndSelect("flight.rows", "rows")
+            .leftJoin("flight.rows", "rows")
             .innerJoinAndSelect("flight.from", "from")
             .innerJoinAndSelect("flight.to", "to")
-            .leftJoinAndSelect("rows.class", "class")
+            .leftJoin("rows.class", "class")
+            // .leftJoinAndSelect("rows.class", "class")
             .orderBy("flight.id")
+            // .where("from.id = :fromId", {fromId: queries.from})
+            .where("class.id = :classId", {classId: queries.class})
             .getMany()
         return flights
     }
@@ -39,7 +43,8 @@ class FlightService {
                 rows: {
                     class: {
                         name: false
-                    }
+                    },
+                    price: true
                 },
             },
             relations: {
@@ -52,7 +57,12 @@ class FlightService {
                 },
                 from: true,
                 to: true
-            }
+            },
+            order: {
+                rows: {
+                    price : "ASC",
+                }
+            },
         })
     }
 
