@@ -18,6 +18,21 @@ class FlightController {
             })
         }
     }
+    one = async (req: Request, res: Response) => {
+        try {
+            let flight = await flightService.one(req.params.id);
+            res.status(200).json({
+                success: true,
+                data: flight
+            });
+        } catch (e) {
+            console.log("error in get one flight:", e)
+            res.status(500).json({
+                message: 'error in get one flight',
+                success: false
+            })
+        }
+    }
     save = async (req: Request, res: Response) => {
         try {
             console.log(req.body)
@@ -37,7 +52,7 @@ class FlightController {
     update = async (req: Request, res: Response) => {
         try {
             await flightService.update(req.params.id, req.body);
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 data: 'update flight success!'
             });
@@ -52,7 +67,7 @@ class FlightController {
     delete = async (req: Request, res: Response) => {
         try {
             await flightService.delete(req.params.id);
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 data: 'delete flight success!'
             });

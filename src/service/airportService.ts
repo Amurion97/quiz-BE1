@@ -1,5 +1,6 @@
 import {AppDataSource} from "../data-source";
 import {Airport} from "../entity/Airport";
+import {Airline} from "../entity/Airline";
 
 class AirportService {
     private airportRepository = AppDataSource.getRepository(Airport);
@@ -9,6 +10,12 @@ class AirportService {
         //     .select("airport")
         //     .from(Airport, "airport")
         //     .getMany()
+    }
+
+    one = async (id) => {
+        return await this.airportRepository.findOneBy({
+            id: id
+        })
     }
 }
 

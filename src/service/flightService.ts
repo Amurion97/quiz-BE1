@@ -51,7 +51,7 @@ class FlightService {
                 aircraft: {
                     airline: true
                 },
-                //rows should not be selected but still have in comparison
+                //rows should not be selected but still have in where condition
                 rows: {
                     class: true
                 },
@@ -63,7 +63,33 @@ class FlightService {
                     price : "ASC",
                 }
             },
+            // skip: queries.skip? queries.skip : 0,
+            // take: 10
         })
+    }
+    one = async (id) => {
+        return await this.flightRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: {
+                aircraft: {
+                    airline: true
+                },
+                //rows should not be selected but still have in where condition
+                rows: {
+                    class: true,
+                    seats: true
+                },
+                from: true,
+                to: true
+            },
+            order: {
+                rows: {
+                    name : "ASC",
+                }
+            },
+        }, )
     }
 
     save = async (flight) => {

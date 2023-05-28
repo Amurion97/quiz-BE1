@@ -13,7 +13,7 @@ export class Seat {
     row: Row;
 
     @Column({
-        default: 0
+        default: 1
     })
     isAvailable: boolean;
 
