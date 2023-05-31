@@ -17,6 +17,16 @@ class SeatService {
         await this.seatRepository.save(seat);
     }
 
+    saveARow = async (setNum, rowId) => {
+        for (let i = 1; i <= setNum ; i++) {
+            await this.seatRepository.save({
+                no: i,
+                row: rowId
+            });
+        }
+
+    }
+
     update = async (id, seat) => {
         await this.seatRepository.update({id: id}, seat);
     }

@@ -17,7 +17,7 @@ class RowService {
     }
 
     save = async (row) => {
-        await this.rowRepository.save(row);
+         return await this.rowRepository.save(row);
     }
 
     update = async (id, row) => {

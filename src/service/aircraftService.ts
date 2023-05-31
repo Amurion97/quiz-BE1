@@ -1,14 +1,30 @@
 import {AppDataSource} from "../data-source";
 import {Aircraft} from "../entity/Aircraft";
 
-class AirlineService {
-
+class AircraftService {
+    private aircraftRepository = AppDataSource.getRepository(Aircraft)
     all = async () => {
         return await AppDataSource.createQueryBuilder()
             .select("aircraft")
             .from(Aircraft, "aircraft")
             .innerJoinAndSelect("aircraft.airline", "airline")
             .getMany()
+    }
+    allOfAnAirline = async (id) => {
+        return await AppDataSource.createQueryBuilder()
+            .select("aircraft")
+            .from(Aircraft, "aircraft")
+            .innerJoinAndSelect("aircraft.airline", "airline")
+            .where("airline.id = :id", {id: id})
+            .getMany()
+        return await this.aircraftRepository.find({
+            where: {
+                airline: id
+            },
+            relations: {
+                airline: true
+            }
+        })
     }
     one = async (id) => {
         return await AppDataSource.createQueryBuilder()
@@ -46,4 +62,4 @@ class AirlineService {
     }
 }
 
-export default new AirlineService();
+export default new AircraftService();

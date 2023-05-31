@@ -1,5 +1,7 @@
 import {Request, Response} from "express";
 import flightService from "../service/flightService";
+import rowService from "../service/rowService";
+import seatService from "../service/seatService";
 
 
 class FlightController {
@@ -36,7 +38,16 @@ class FlightController {
     save = async (req: Request, res: Response) => {
         try {
             console.log(req.body)
-            await flightService.save(req.body);
+            let flight = await flightService.save(req.body);
+            console.log("new flight id:", flight.id)
+            await Promise.all(req.body.rows.map((item) => {
+                return rowService.save({
+                    ...item,
+                    flight: flight.id
+                }).then(row => {
+                    seatService.saveARow(req.body.seats, row.id)
+                })
+            }))
             res.status(201).json({
                 success: true,
                 data: 'Add flight success!'

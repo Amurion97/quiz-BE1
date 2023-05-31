@@ -17,6 +17,23 @@ class AircraftController {
             })
         }
     }
+
+    allOfAnAirline = async (req: Request, res: Response) => {
+        try {
+            console.log("allOfAnAirline:", req.params.id)
+            let aircraft = await aircraftService.allOfAnAirline(req.params.id);
+            res.status(201).json({
+                success: true,
+                data: aircraft
+            });
+        } catch (e) {
+            console.log("error in get all aircraft of an airline:", e)
+            res.status(500).json({
+                success: false,
+                message: 'error in get all aircraft of an airline'
+            })
+        }
+    }
     one = async (req: Request, res: Response) => {
         try {
             let aircraft = await aircraftService.one(req.params.id);

@@ -93,7 +93,7 @@ class FlightService {
     }
 
     save = async (flight) => {
-        await this.flightRepository.save(flight);
+        return await this.flightRepository.save(flight);
     }
 
     update = async (id, flight) => {
