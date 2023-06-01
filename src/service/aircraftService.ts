@@ -4,11 +4,11 @@ import {Aircraft} from "../entity/Aircraft";
 class AircraftService {
     private aircraftRepository = AppDataSource.getRepository(Aircraft)
     all = async () => {
-        return await AppDataSource.createQueryBuilder()
-            .select("aircraft")
-            .from(Aircraft, "aircraft")
-            .innerJoinAndSelect("aircraft.airline", "airline")
-            .getMany()
+        return await this.aircraftRepository.find({
+            relations: {
+                airline: true
+            }
+        })
     }
     allOfAnAirline = async (id) => {
         return await AppDataSource.createQueryBuilder()
@@ -17,6 +17,8 @@ class AircraftService {
             .innerJoinAndSelect("aircraft.airline", "airline")
             .where("airline.id = :id", {id: id})
             .getMany()
+
+        //below code is not fixable
         return await this.aircraftRepository.find({
             where: {
                 airline: id
@@ -27,38 +29,26 @@ class AircraftService {
         })
     }
     one = async (id) => {
-        return await AppDataSource.createQueryBuilder()
-            .select("aircraft")
-            .from(Aircraft, "aircraft")
-            .where("aircraft.id = :id", {id: id})
-            .innerJoinAndSelect("aircraft.airline", "airline")
-            .getOne()
+        return await this.aircraftRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: {
+                airline: true
+            }
+        })
     }
 
     save = async (aircraft) => {
-        await AppDataSource.createQueryBuilder()
-            .insert()
-            .into(Aircraft)
-            .values([
-                {name: aircraft.name, airline: aircraft.airline}
-            ])
-            .execute()
+        await this.aircraftRepository.save(aircraft)
     }
 
     update = async (id, aircraft) => {
-        await AppDataSource.createQueryBuilder()
-            .update(Aircraft)
-            .set({name: aircraft.name, airline: aircraft.airline})
-            .where("id = :id", {id: id})
-            .execute()
+        await this.aircraftRepository.save({id: id}, aircraft)
     }
 
     delete = async (id) => {
-        await AppDataSource.createQueryBuilder()
-            .delete()
-            .from(Aircraft)
-            .where("id = :id", {id: id})
-            .execute()
+        await this.aircraftRepository.delete({id: id})
     }
 }
 
