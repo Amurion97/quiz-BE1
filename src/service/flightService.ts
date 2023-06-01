@@ -87,6 +87,9 @@ class FlightService {
             order: {
                 rows: {
                     name : "ASC",
+                    seats: {
+                        no: "ASC"
+                    }
                 }
             },
         }, )

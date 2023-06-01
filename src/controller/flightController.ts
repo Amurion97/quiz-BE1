@@ -39,7 +39,8 @@ class FlightController {
         try {
             console.log(req.body)
             let flight = await flightService.save(req.body);
-            console.log("new flight id:", flight.id)
+            console.log("new flight id:", flight.id);
+
             await Promise.all(req.body.rows.map((item) => {
                 return rowService.save({
                     ...item,

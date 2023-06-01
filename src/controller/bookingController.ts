@@ -1,5 +1,7 @@
 import {Request, Response} from "express";
 import bookingService from "../service/bookingService";
+import ticketService from "../service/ticketService";
+import seatService from "../service/seatService";
 
 class BookingController {
     all = async (req: Request, res: Response) => {
@@ -35,8 +37,19 @@ class BookingController {
 
     save = async (req: Request, res: Response) => {
         try {
-            req.body.user = req['decode']['id'];
-            await bookingService.save(req.body);
+            let booking = await bookingService.save(req.body);
+            for (let i = 0; i < req.body.tickets.length; i++) {
+                let ticket = req.body.tickets[i];
+                ticket.booking = booking.id;
+                let seat = await seatService.one(ticket.seat);
+                ticket.price = seat.row.price
+                await ticketService.save(ticket);
+            }
+            for (let i = 0; i < req.body.tickets.length; i++) {
+                let ticket = req.body.tickets[i];
+                let seatID = ticket.seat;
+                await seatService.disable(seatID);
+            }
             res.status(201).json({
                 success: true,
                 data: 'Add booking success!'

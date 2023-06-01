@@ -13,12 +13,22 @@ class SeatService {
             .getMany()
     }
 
+    one = async (id) => {
+        return await this.seatRepository.findOne({
+            relations: {
+                row: true
+            },
+            where: {
+                id: id
+            }
+        })
+    }
     save = async (seat) => {
         await this.seatRepository.save(seat);
     }
 
     saveARow = async (setNum, rowId) => {
-        for (let i = 1; i <= setNum ; i++) {
+        for (let i = 1; i <= setNum; i++) {
             await this.seatRepository.save({
                 no: i,
                 row: rowId
@@ -29,6 +39,9 @@ class SeatService {
 
     update = async (id, seat) => {
         await this.seatRepository.update({id: id}, seat);
+    }
+    disable = async (id) => {
+        await this.seatRepository.save({id: id, isAvailable: false});
     }
 
     delete = async (id) => {

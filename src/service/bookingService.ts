@@ -2,13 +2,32 @@ import {AppDataSource} from "../data-source";
 import {Booking} from "../entity/Booking";
 
 class BookingService {
-
+    private bookingRepository = AppDataSource.getRepository(Booking)
     all = async () => {
+        return await this.bookingRepository.find({
+            relations: {
+                tickets: {
+                    seat: {
+                        row: {
+                            class: true,
+                            flight: {
+                                from: true,
+                                to: true,
+                                aircraft: {
+                                    airline: true
+                                }
+                            }
+                        }
+                    }
+                },
+            }
+        })
+
         return await AppDataSource.createQueryBuilder()
             .select("booking")
             .from(Booking, "booking")
             .innerJoinAndSelect("booking.seat", "seat")
-            .innerJoinAndSelect("seat.row","row")
+            .innerJoinAndSelect("seat.row", "row")
             .innerJoinAndSelect("row.class", "class")
             .innerJoinAndSelect("row.flight", "flight")
             .innerJoinAndSelect("flight.aircraft", "aircraft")
@@ -19,11 +38,33 @@ class BookingService {
     }
 
     one = async (id) => {
+        return await this.bookingRepository.findOne({
+            relations: {
+                tickets: {
+                    seat: {
+                        row: {
+                            class: true,
+                            flight: {
+                                from: true,
+                                to: true,
+                                aircraft: {
+                                    airline: true
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                id: id
+            }
+        })
+
         return await AppDataSource.createQueryBuilder()
             .select("booking")
             .from(Booking, "booking")
             .innerJoinAndSelect("booking.seat", "seat")
-            .innerJoinAndSelect("seat.row","row")
+            .innerJoinAndSelect("seat.row", "row")
             .innerJoinAndSelect("row.class", "class")
             .innerJoinAndSelect("row.flight", "flight")
             .innerJoinAndSelect("flight.aircraft", "aircraft")
@@ -35,24 +76,15 @@ class BookingService {
     }
 
     save = async (booking) => {
-        await AppDataSource.createQueryBuilder()
-            .insert()
-            .into(Booking)
-            .values([
-                {seat: booking.seat, user: booking.user}
-            ])
-            .execute()
+        return await this.bookingRepository.save(booking)
     }
 
     update = async (id, booking) => {
-        await AppDataSource.createQueryBuilder()
-            .update(Booking)
-            .set({seat: booking.seat})
-            .where("id = :id", {id: id})
-            .execute()
+        await this.bookingRepository.update({id: id}, booking)
     }
 
     delete = async (id) => {
+        await this.bookingRepository.delete({id: id})
         await AppDataSource.createQueryBuilder()
             .delete()
             .from(Booking)

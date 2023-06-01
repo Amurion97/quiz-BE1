@@ -14,23 +14,38 @@ class UserService {
         await this.userRepository.save(user);
     }
     loginCheck = async (user) => {
-        let foundUser = await AppDataSource.createQueryBuilder()
-            .select("user")
-            .from(User, "user")
-            .where("user.username = :username", {username: user.username})
-            .innerJoinAndSelect("user.role", "role")
-            .getOne()
+        // let foundUser = await AppDataSource.createQueryBuilder()
+        //     .select("user")
+        //     .from(User, "user")
+        //     .where("user.username = :username", {username: user.username})
+        //     .innerJoinAndSelect("user.role", "role")
+        //     .getOne()
+        let foundUser = await this.userRepository.findOne({
+            relations: {
+                role: true
+            },
+            where: {
+                username: user.username,
+            }
+        })
+        console.log("foundUser:", foundUser)
         if (foundUser) {
             let pass = await bcrypt.compare(user.password, foundUser.password);
             if (pass) {
                 let payload = {
                     id: foundUser.id,
                     username: foundUser.username,
-                    role: foundUser.role
+                    role: foundUser.role.id
                 }
-                return jwt.sign(payload, SECRET, {
-                    expiresIn: 36000 * 10 * 100
-                })
+                return {
+                    info: {
+                        username: foundUser.username,
+                        role: foundUser.role.id
+                    },
+                    token: jwt.sign(payload, SECRET, {
+                        expiresIn: '1h'
+                    })
+                }
             }
             return null
         }

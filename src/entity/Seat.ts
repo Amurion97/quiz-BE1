@@ -1,6 +1,7 @@
 import {Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Row} from "./Row";
 import {Booking} from "./Booking";
+import {Ticket} from "./Ticket";
 
 @Entity()
 export class Seat {
@@ -17,6 +18,6 @@ export class Seat {
     })
     isAvailable: boolean;
 
-    @OneToOne(() => Booking, (booking) => booking.seat)
-    booking: Booking
+    @OneToOne(() => Ticket, (ticket) => ticket.seat)
+    booking: Ticket
 }

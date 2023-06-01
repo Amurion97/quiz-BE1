@@ -9,4 +9,6 @@ export class Airline {
     name: string;
     @OneToMany(() => Aircraft, (aircraft) => aircraft.airline)
     aircraft: Aircraft[];
+    @Column()
+    imageURL: string;
 }
