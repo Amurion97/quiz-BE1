@@ -17,7 +17,7 @@ class AirportService {
     }
 
     update = async (id, airport) => {
-        await this.airportRepository.save({id: id}, airport)
+        await this.airportRepository.update({id: id}, airport)
     }
 
     delete = async (id) => {

@@ -18,7 +18,7 @@ class AirlineService {
     }
 
     update = async (id, airline) => {
-        await this.airlineRepository.save({id: id}, airline)
+        await this.airlineRepository.update({id: id}, airline)
     }
 
     delete = async (id) => {
