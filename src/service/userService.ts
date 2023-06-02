@@ -32,6 +32,11 @@ class UserService {
         if (foundUser) {
             let pass = await bcrypt.compare(user.password, foundUser.password);
             if (pass) {
+                if (foundUser.isLocked) {
+                    return {
+                        isLocked: true
+                    }
+                }
                 let payload = {
                     id: foundUser.id,
                     username: foundUser.username,
@@ -77,6 +82,9 @@ class UserService {
             .from(User, 'user')
             .innerJoinAndSelect('user.role', 'role')
             .getMany();
+    }
+    delete = async (id) => {
+        await this.userRepository.delete({id: id});
     }
 }
 

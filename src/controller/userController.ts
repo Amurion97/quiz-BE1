@@ -1,6 +1,5 @@
 import userService from "../service/userService";
 import {Request, Response} from "express";
-import seatService from "../service/seatService";
 
 class UserController {
 
@@ -34,10 +33,18 @@ class UserController {
             console.log(req.body)
             let payload = await userService.loginCheck(req.body);
             if (payload) {
-                res.status(200).json({
-                    success: true,
-                    data: payload
-                });
+                if (payload.isLocked) {
+                    res.status(403).json({
+                        message: "Locked account",
+                        success: false
+                    })
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        data: payload
+                    });
+                }
+
             } else {
                 throw new Error("Wrong username or password")
             }
@@ -89,9 +96,25 @@ class UserController {
             let newUser = await userService.updateUser(id, user);
             res.status(201).json(newUser);
         } catch (e) {
-            console.log("error in editUser")
+            console.log("error in editUser:", e)
             res.status(500).json({
                 message: 'error in editUser',
+                success: false
+            })
+        }
+    }
+
+    delete = async (req: Request, res: Response) => {
+        try {
+            await userService.delete(req.params.id);
+            res.status(200).json({
+                success: true,
+                data: 'delete user success!'
+            });
+        } catch (e) {
+            console.log("error in delete user:", e)
+            res.status(500).json({
+                message: 'error in delete user',
                 success: false
             })
         }
