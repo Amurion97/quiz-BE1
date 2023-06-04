@@ -75,6 +75,31 @@ class BookingService {
             .getOne()
     }
 
+    oneSearch = async (booking) => {
+        return await this.bookingRepository.findOne({
+            relations: {
+                tickets: {
+                    seat: {
+                        row: {
+                            class: true,
+                            flight: {
+                                from: true,
+                                to: true,
+                                aircraft: {
+                                    airline: true
+                                }
+                            }
+                        }
+                    }
+                },
+            },
+            where: {
+                email: booking.email,
+                phoneNumber: booking.phoneNumber
+            }
+        })
+    }
+
     save = async (booking) => {
         return await this.bookingRepository.save(booking)
     }

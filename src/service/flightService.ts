@@ -36,8 +36,10 @@ class FlightService {
                 start: (queries.start) ? Between(new Date(queries.start), startPlus) : Not(IsNull()),
                 rows: {
                     // class: queries.class ? ArrayContains([parseInt(queries.class)]) : Not(IsNull()),
-                    class: queries.class ? Equal(parseInt(queries.class)) : Not(IsNull()),
-                }
+                    // class: queries.class ? Equal(parseInt(queries.class)) : Not(IsNull()),
+                    class: queries.class ? Equal(parseInt(queries.class)) : Not(0),
+                },
+                // isCanceled: false,
             },
             select: {
                 rows: {
@@ -105,7 +107,9 @@ class FlightService {
     }
 
     delete = async (id) => {
-        await this.flightRepository.delete({id: id});
+        await this.flightRepository.update({id: id}, {
+            isCanceled: true
+        });
     }
 
 }

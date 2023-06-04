@@ -92,6 +92,26 @@ class BookingController {
             })
         }
     }
+
+    getOne = async (req: Request, res: Response) => {
+        try {
+            let booking = await bookingService.oneSearch(req.body);
+            console.log("booking:", booking)
+            if (booking) {
+                res.status(201).json({
+                    success: true,
+                    data: booking
+                });
+            } else throw new Error ("No booking is found")
+
+        } catch (e) {
+            console.log("error in get a booking:", e)
+            res.status(500).json({
+                message: 'error in get a booking',
+                success: false
+            })
+        }
+    }
 }
 
 export default new BookingController();
