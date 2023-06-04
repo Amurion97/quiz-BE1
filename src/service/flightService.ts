@@ -59,6 +59,7 @@ class FlightService {
                 to: true
             },
             order: {
+                id: "ASC",
                 rows: {
                     price : "ASC",
                 }
