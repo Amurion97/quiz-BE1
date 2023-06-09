@@ -8,10 +8,6 @@ export class Booking {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => User, (user) => user.booking, {
-        nullable: true
-    })
-    user: User;
     @Column({
         nullable: true
     })

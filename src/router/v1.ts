@@ -2,7 +2,7 @@ import {Router} from "express";
 import userRouter from "./userRouter";
 import seatRouter from "./seatRouter";
 import rowRouter from "./rowRouter";
-import roleRouter from "./roleRouter";
+import roleRouter from "./v1/roleRouter";
 import airlineRouter from "./airlineRouter";
 import aircraftRouter from "./aircraftRouter";
 import bookingRouter from "./bookingRouter";
