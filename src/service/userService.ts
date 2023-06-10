@@ -3,6 +3,8 @@ import {User} from "../entity/User";
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken";
 import {SECRET} from "../middleware/auth";
+// import * as otpGenerator from "otp-generator";
+const otpGenerator = require('otp-generator')
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -85,6 +87,22 @@ class UserService {
     }
     delete = async (id) => {
         await this.userRepository.delete({id: id});
+    }
+
+    passwordReset = async (email) => {
+        let user = await this.userRepository.findOneBy({
+            email: email
+        })
+        if (!user) {
+            throw new Error("Email not found");
+        } else {
+            let otp = otpGenerator.generate(6, {
+                lowerCaseAlphabets: false,
+                upperCaseAlphabets: false,
+                specialChars: false
+            })
+            return "Email sended"
+        }
     }
 }
 
