@@ -10,8 +10,6 @@ export class User {
     @Column({type: "varchar", length: 255, nullable: true})
     name: string;
     @Column({type: "varchar", length: 255})
-    username: string;
-    @Column({type: "varchar", length: 255})
     email: string;
     @Column({type: "varchar", length: 255})
     password: string;
@@ -31,4 +29,5 @@ export class User {
         default: 0
     })
     isLocked: boolean;
+
 }

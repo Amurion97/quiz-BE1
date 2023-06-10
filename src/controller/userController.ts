@@ -5,17 +5,17 @@ class UserController {
 
     register = async (req: Request, res: Response) => {
         try {
-            let check = await userService.checkUsedUsername(req.body.username)
+            let check = await userService.checkUsedEmail(req.body.email)
             if (!check) {
                 await userService.save(req.body);
                 await res.status(201).json({
                     success: true,
-                    data: req.body.username
+                    data: req.body.email
                 });
             } else {
                 await res.status(409).json({
                     success: false,
-                    message: 'Used username'
+                    message: 'Used email'
                 });
             }
         } catch (e) {
@@ -27,6 +27,7 @@ class UserController {
         }
 
     }
+
 
     login = async (req: Request, res: Response) => {
         try {
