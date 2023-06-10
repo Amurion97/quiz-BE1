@@ -31,7 +31,7 @@ class UserController {
 
     login = async (req: Request, res: Response) => {
         try {
-            console.log(req.body)
+            console.log("user login:", req.body);
             let payload = await userService.loginCheck(req.body);
             if (payload) {
                 if (payload.isLocked) {
@@ -45,7 +45,6 @@ class UserController {
                         data: payload
                     });
                 }
-
             } else {
                 throw new Error("Wrong email or password")
             }

@@ -56,7 +56,7 @@ class UserService {
             }
             return null
         }
-        return null
+        throw new Error("Email not found")
     }
 
     one = async (userId) => {
