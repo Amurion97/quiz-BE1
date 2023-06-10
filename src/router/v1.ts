@@ -1,5 +1,5 @@
 import {Router} from "express";
-import userRouter from "./userRouter";
+import userRouter from "./v1/userRouter";
 import seatRouter from "./seatRouter";
 import rowRouter from "./rowRouter";
 import roleRouter from "./v1/roleRouter";
