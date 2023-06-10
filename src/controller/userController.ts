@@ -47,7 +47,7 @@ class UserController {
                 }
 
             } else {
-                throw new Error("Wrong username or password")
+                throw new Error("Wrong email or password")
             }
         } catch (e) {
             console.log("error in login:", e)
