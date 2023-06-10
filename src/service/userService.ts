@@ -12,7 +12,7 @@ class UserService {
     save = async (user) => {
         let hashedPassword = bcrypt.hashSync(user.password, 10);
         user.password = hashedPassword;
-        user.role = 2;
+        user.role = 3;
         await this.userRepository.save(user);
     }
     loginCheck = async (user) => {
@@ -27,7 +27,7 @@ class UserService {
                 role: true
             },
             where: {
-                username: user.username,
+                email: user.email,
             }
         })
         console.log("foundUser:", foundUser)
@@ -41,12 +41,12 @@ class UserService {
                 }
                 let payload = {
                     id: foundUser.id,
-                    username: foundUser.username,
+                    email: foundUser.email,
                     role: foundUser.role.id
                 }
                 return {
                     info: {
-                        username: foundUser.username,
+                        email: foundUser.email,
                         role: foundUser.role.id
                     },
                     token: jwt.sign(payload, SECRET, {
@@ -69,10 +69,10 @@ class UserService {
         user.password = await bcrypt.hash(user.password, 10)
         await this.userRepository.update({id: id}, user);
     }
-    checkUsedUsername = async (username) => {
+    checkUsedEmail = async (email) => {
         let user = await this.userRepository.findOne({
             where: {
-                username: username,
+                email: email,
                 // password: user.password
             }
         });
