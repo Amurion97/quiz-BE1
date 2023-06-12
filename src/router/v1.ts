@@ -9,6 +9,7 @@ import bookingRouter from "./bookingRouter";
 import classRouter from "./classRouter";
 import flightRouter from "./flightRouter";
 import airportRouter from "./airportRouter";
+import tagRouter from "./tagRouter";
 
 const routerV1 = Router();
 routerV1.use('/users', userRouter);
@@ -21,5 +22,6 @@ routerV1.use('/bookings', bookingRouter);
 routerV1.use('/classes', classRouter);
 routerV1.use('/flights', flightRouter);
 routerV1.use('/airports', airportRouter);
+routerV1.use('/tag',tagRouter)
 
 export default routerV1;
