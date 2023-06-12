@@ -11,6 +11,7 @@ userRouter.post('/login', userController.login);
 // userRouter.get('/profile', auth, userController.showUser);
 userRouter.get('/:id', userController.showUser);
 // userRouter.put('/profile', auth, userController.editUser);
+userRouter.put('/editRole/:id', userController.updateRoleOfUser)
 userRouter.put('/:id', userController.editUser);
 userRouter.delete('/:id', userController.delete);
 

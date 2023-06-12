@@ -3,6 +3,8 @@ import {User} from "../entity/User";
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken";
 import {SECRET} from "../middleware/auth";
+import roleService from "./roleService";
+import { log } from "console";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -64,8 +66,14 @@ class UserService {
         return userFind;
     }
     updateUser = async (id, user) => {
+        console.log('USER', user)
         user.password = await bcrypt.hash(user.password, 10)
         await this.userRepository.update({id: id}, user);
+    }
+
+    updateRoleOfUser = async (id) => {
+        let teacherRole = await roleService.one(2)
+        await this.userRepository.update({id: id}, {role: teacherRole});
     }
     checkUsedUsername = async (username) => {
         let user = await this.userRepository.findOne({
