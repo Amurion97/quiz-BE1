@@ -28,7 +28,7 @@ class UserService {
                 username: user.username,
             }
         })
-        console.log("foundUser:", foundUser)
+        // console.log("foundUser:", foundUser)
         if (foundUser) {
             let pass = await bcrypt.compare(user.password, foundUser.password);
             if (pass) {
