@@ -30,7 +30,7 @@ class UserService {
                 email: user.email,
             }
         })
-        console.log("foundUser:", foundUser)
+        // console.log("foundUser:", foundUser)
         if (foundUser) {
             let pass = await bcrypt.compare(user.password, foundUser.password);
             if (pass) {
@@ -47,7 +47,8 @@ class UserService {
                 return {
                     info: {
                         email: foundUser.email,
-                        role: foundUser.role.id
+                        role: foundUser.role.id,
+                        name: foundUser.name
                     },
                     token: jwt.sign(payload, SECRET, {
                         expiresIn: '1h'

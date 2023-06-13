@@ -61,6 +61,7 @@ class UserController {
 
     }
     all = async (req: Request, res: Response) => {
+        console.log("check ",req["decode"])
         try {
             let users = await userService.all();
             res.status(201).json({
