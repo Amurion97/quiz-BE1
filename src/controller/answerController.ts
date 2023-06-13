@@ -1,19 +1,19 @@
 import {Request, Response} from "express";
-import TagService from "../service/tagService";
+import AnswerService from "../service/answerService";
 
-class TagController {
+class AnswerController {
     all = async (req: Request, res: Response) => {
         try {
-            let tags = await TagService.all();
-            console.log(tags)
+            let answers = await AnswerService.all();
+            console.log(answers)
             res.status(201).json({
                 success: true,
-                data: tags
+                data: answers
             });
         } catch (e) {
-            console.log("error in get all tag:", e)
+            console.log("error in get all answer:", e)
             res.status(500).json({
-                message: 'error in get all tag',
+                message: 'error in get all answer',
                 success: false
             })
         }
@@ -21,49 +21,49 @@ class TagController {
 
     save = async (req: Request, res: Response) => {
         try {
-            await TagService.save(req.body);
+            await AnswerService.save(req.body);
             res.status(201).json({
                 success: true,
-                data: 'Add tag success!'
+                data: 'Add answer success!'
             });
         } catch (e) {
-            console.log("error in add tag:", e)
+            console.log("error in add answer:", e)
             res.status(500).json({
-                message: 'error in add tag',
+                message: 'error in add answer',
                 success: false
             })
         }
     }
     update = async (req: Request, res: Response) => {
         try {
-            await TagService.update(req.params.id, req.body);
+            await AnswerService.update(req.params.id, req.body);
             res.status(201).json({
                 success: true,
-                data: 'update tag success!'
+                data: 'update answer success!'
             });
         } catch (e) {
             console.log("error in update row:", e)
             res.status(500).json({
-                message: 'error in update tag',
+                message: 'error in update answer',
                 success: false
             })
         }
     }
     delete = async (req: Request, res: Response) => {
         try {
-            await TagService.delete(req.params.id);
+            await AnswerService.delete(req.params.id);
             res.status(201).json({
                 success: true,
-                data: 'delete tag success!'
+                data: 'delete answer success!'
             });
         } catch (e) {
             console.log("error in delete row:", e)
             res.status(500).json({
-                message: 'error in delete tag',
+                message: 'error in delete answer',
                 success: false
             })
         }
     }
 }
 
-export default new TagController();
+export default new AnswerController();

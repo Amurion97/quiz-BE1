@@ -5,21 +5,29 @@ class TagService {
     private tagRepository = AppDataSource.getRepository(Tag)
     all = async () => {
         return await this.tagRepository.find({
-            relations: {
-                questions:true
-            },
            order:{
                id:"ASC"
            }
         })
     }
 
-    save = async (ticket) => {
-        await this.tagRepository.save(ticket)
+    allWithQuestions = async () => {
+        return await this.tagRepository.find({
+            relations: {
+                questions:true
+            },
+            order:{
+                id:"ASC"
+            }
+        })
     }
 
-    update = async (id, ticket) => {
-        await this.tagRepository.update({id: id}, ticket)
+    save = async (tag) => {
+        console.log(await this.tagRepository.save(tag))
+    }
+
+    update = async (id, tag) => {
+        await this.tagRepository.update({id: id}, tag)
     }
 
     delete = async (id) => {

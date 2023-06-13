@@ -1,19 +1,19 @@
 import {Request, Response} from "express";
-import TagService from "../service/tagService";
+import TypeService from "../service/typeService";
 
-class TagController {
+class TypeController {
     all = async (req: Request, res: Response) => {
         try {
-            let tags = await TagService.all();
-            console.log(tags)
+            let types = await TypeService.all();
+            console.log(types)
             res.status(201).json({
                 success: true,
-                data: tags
+                data: types
             });
         } catch (e) {
-            console.log("error in get all tag:", e)
+            console.log("error in get all type:", e)
             res.status(500).json({
-                message: 'error in get all tag',
+                message: 'error in get all type',
                 success: false
             })
         }
@@ -21,49 +21,49 @@ class TagController {
 
     save = async (req: Request, res: Response) => {
         try {
-            await TagService.save(req.body);
+            await TypeService.save(req.body);
             res.status(201).json({
                 success: true,
-                data: 'Add tag success!'
+                data: 'Add type success!'
             });
         } catch (e) {
-            console.log("error in add tag:", e)
+            console.log("error in add type:", e)
             res.status(500).json({
-                message: 'error in add tag',
+                message: 'error in add type',
                 success: false
             })
         }
     }
     update = async (req: Request, res: Response) => {
         try {
-            await TagService.update(req.params.id, req.body);
+            await TypeService.update(req.params.id, req.body);
             res.status(201).json({
                 success: true,
-                data: 'update tag success!'
+                data: 'update type success!'
             });
         } catch (e) {
             console.log("error in update row:", e)
             res.status(500).json({
-                message: 'error in update tag',
+                message: 'error in update type',
                 success: false
             })
         }
     }
     delete = async (req: Request, res: Response) => {
         try {
-            await TagService.delete(req.params.id);
+            await TypeService.delete(req.params.id);
             res.status(201).json({
                 success: true,
-                data: 'delete tag success!'
+                data: 'delete type success!'
             });
         } catch (e) {
             console.log("error in delete row:", e)
             res.status(500).json({
-                message: 'error in delete tag',
+                message: 'error in delete type',
                 success: false
             })
         }
     }
 }
 
-export default new TagController();
+export default new TypeController();
