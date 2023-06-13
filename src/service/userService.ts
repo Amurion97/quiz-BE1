@@ -5,6 +5,7 @@ import * as jwt from "jsonwebtoken";
 import {SECRET} from "../middleware/auth";
 // import * as otpGenerator from "otp-generator";
 const otpGenerator = require('otp-generator')
+import roleService from "./roleService";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -80,6 +81,11 @@ class UserService {
             })
             .where("id = :id", { id: id })
             .execute()
+    }
+
+    updateRoleOfUser = async (id) => {
+        let teacherRole = await roleService.one(2)
+        await this.userRepository.update({id: id}, {role: teacherRole});
     }
 
     checkUsedEmail = async (email) => {

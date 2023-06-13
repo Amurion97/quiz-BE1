@@ -134,6 +134,22 @@ class UserController {
 
 
     }
+    updateRoleOfUser = async (req: Request, res: Response) => {
+        try{
+            let id = req.params.id;
+            await userService.updateRoleOfUser(id)
+            res.status(201).json({
+                messege: "update role success"
+            });
+        }
+        catch (e) {
+            console.log("error in updateRoleOfUser:", e)
+            res.status(500).json({
+                message: 'error in updateRoleOfUser',
+                success: false
+            })
+        }
+    }
 
     delete = async (req: Request, res: Response) => {
         try {

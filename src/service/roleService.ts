@@ -8,6 +8,10 @@ class RoleService {
         return await this.roleRepository.find()
     }
 
+    one = async (id) => {
+        return await this.roleRepository.findOneBy({id: id})
+    }
+
     save = async (role) => {
         await this.roleRepository.save(role);
     }
