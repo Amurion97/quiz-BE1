@@ -1,5 +1,7 @@
 import userService from "../service/userService";
 import {Request, Response} from "express";
+import {decode} from "punycode";
+import * as bcrypt from "bcrypt";
 
 class UserController {
 
@@ -89,19 +91,47 @@ class UserController {
             })
         }
     }
-    editUser = async (req: Request, res: Response) => {
-        try {
-            let user = req.body;
-            let id = req.params.id
-            let newUser = await userService.updateUser(id, user);
-            res.status(201).json(newUser);
-        } catch (e) {
-            console.log("error in editUser:", e)
-            res.status(500).json({
-                message: 'error in editUser',
-                success: false
-            })
-        }
+
+    // editUser = async (req: Request, res: Response) => {
+    //     try {
+    //         let user = req.body;
+    //         let id = req.params.id
+    //         let newUser = await userService.updateUser(id, user);
+    //         res.status(201).json(newUser);
+    //     } catch (e) {
+    //         console.log("error in editUser:", e)
+    //         res.status(500).json({
+    //             message: 'error in editUser',
+    //             success: false
+    //         })
+    //     }
+    // }
+    changePassword = async (req: Request, res: Response) => {
+        let id = req["decode"]["id"];
+        let user = await userService.one(id);
+        let userPassword = user.password;
+        bcrypt.compare(req.body.password, userPassword, async function (err, result) {
+            if (result === true) {
+                try {
+                    let user = req.body;
+                    let id = req["decode"]["id"];
+                    let newUser = await userService.updatePassword(id, user);
+                    res.status(201).json(newUser);
+                } catch (e) {
+                    res.status(500).json({
+                        message: 'error in editUser',
+                        success: false
+                    })
+                }
+            } else {
+                res.status(500).json({
+                    message: 'error in editUser',
+                    success: false
+                })
+            }
+        });
+
+
     }
 
     delete = async (req: Request, res: Response) => {

@@ -69,6 +69,18 @@ class UserService {
         user.password = await bcrypt.hash(user.password, 10)
         await this.userRepository.update({id: id}, user);
     }
+    updatePassword = async (id, user) => {
+        user.password = await bcrypt.hash(user.newPassword, 10)
+      return  await this.userRepository
+            .createQueryBuilder()
+            .update(User)
+            .set({
+                password: user.password,
+            })
+            .where("id = :id", { id: id })
+            .execute()
+    }
+
     checkUsedEmail = async (email) => {
         let user = await this.userRepository.findOne({
             where: {
