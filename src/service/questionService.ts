@@ -1,5 +1,5 @@
 import {AppDataSource} from "../data-source";
-import {Between, Equal, IsNull, Not} from "typeorm";
+import {Between, Equal, IsNull, Like, Not} from "typeorm";
 import {Question} from "../entity/Question";
 import answerService from "./answerService";
 
@@ -7,14 +7,12 @@ class QuestionService {
     private questionRepository = AppDataSource.getRepository(Question);
 
     all = async (queries) => {
-        console.log("queries:", queries)
+        console.log("queries:", queries);
         return await this.questionRepository.find({
             where: {
-
+                content: queries.content ? Like(`%${queries.content}%`) : Not(IsNull())
             },
-            select: {
-
-            },
+            select: {},
             relations: {
                 answers: true,
                 type: true,
@@ -37,10 +35,8 @@ class QuestionService {
             relations: {
                 answers: true
             },
-            order: {
-
-            },
-        }, )
+            order: {},
+        },)
     }
 
     save = async (question) => {
