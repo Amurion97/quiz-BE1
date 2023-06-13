@@ -9,7 +9,7 @@ import bookingRouter from "./bookingRouter";
 import classRouter from "./classRouter";
 import flightRouter from "./flightRouter";
 import airportRouter from "./airportRouter";
-import tagRouter from "./tagRouter";
+import tagRouter from "./v1/tagRouter";
 
 const routerV1 = Router();
 routerV1.use('/users', userRouter);
