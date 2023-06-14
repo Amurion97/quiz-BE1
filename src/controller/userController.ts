@@ -61,7 +61,7 @@ class UserController {
 
     }
     all = async (req: Request, res: Response) => {
-        console.log("check ",req["decode"])
+        console.log("check ", req["decode"])
         try {
             let users = await userService.all();
             res.status(201).json({
@@ -135,14 +135,13 @@ class UserController {
 
     }
     updateRoleOfUser = async (req: Request, res: Response) => {
-        try{
+        try {
             let id = req.params.id;
             await userService.updateRoleOfUser(id)
             res.status(201).json({
                 messege: "update role success"
             });
-        }
-        catch (e) {
+        } catch (e) {
             console.log("error in updateRoleOfUser:", e)
             res.status(500).json({
                 message: 'error in updateRoleOfUser',
@@ -162,6 +161,78 @@ class UserController {
             console.log("error in delete user:", e)
             res.status(500).json({
                 message: 'error in delete user',
+                success: false
+            })
+        }
+    }
+
+    passwordResetRequest = async (req: Request, res: Response) => {
+        try {
+            console.log("user reset password:", req.body);
+            let success = await userService.passwordResetRequest(req.body.email);
+            if (success) {
+                res.status(200).json({
+                    success: true,
+                    data: "Email sent"
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    data: "Email not found"
+                });
+            }
+        } catch (e) {
+            console.log("error while password reset:", e)
+            res.status(500).json({
+                message: "Error while password reset",
+                success: false
+            })
+        }
+    }
+
+    OTPCheck = async (req: Request, res: Response) => {
+        try {
+            console.log("user OTP check:", req.body);
+            let success = await userService.OTPCheck(req.body.email, req.body.OTP);
+            if (success) {
+                res.status(200).json({
+                    success: true,
+                    data: "OTP correct"
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    data: "OTP incorrect"
+                });
+            }
+        } catch (e) {
+            console.log("error while password reset:", e)
+            res.status(500).json({
+                message: "Error while password reset",
+                success: false
+            })
+        }
+    }
+
+    resetPassword = async (req: Request, res: Response) => {
+        try {
+            console.log("user reset password:", req.body);
+            let success = await userService.resetPassword( req.body);
+            if (success) {
+                res.status(200).json({
+                    success: true,
+                    data: "Password reset"
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    data: "OTP incorrect"
+                });
+            }
+        } catch (e) {
+            console.log("error while password reset:", e)
+            res.status(500).json({
+                message: "Error while password reset",
                 success: false
             })
         }

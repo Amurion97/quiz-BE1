@@ -24,6 +24,11 @@ export class User {
     phoneNumber: string;
     @Column({type: "varchar", length: 255, nullable: true})
     address: string;
+
+    @Column({type: "varchar", length: 6, nullable: true})
+    OTP: string;
+    @Column({nullable: true})
+    OTPGenTime: Date;
 //will delete later
     @Column({
         default: 0
