@@ -63,7 +63,7 @@ class FlightService {
             order: {
                 id: "ASC",
                 rows: {
-                    price : "ASC",
+                    price: "ASC",
                 }
             },
             // skip: queries.skip? queries.skip : 0,
@@ -89,13 +89,13 @@ class FlightService {
             },
             order: {
                 rows: {
-                    name : "ASC",
+                    name: "ASC",
                     seats: {
                         no: "ASC"
                     }
                 }
             },
-        }, )
+        },)
     }
 
     save = async (flight) => {
