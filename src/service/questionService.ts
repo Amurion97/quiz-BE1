@@ -41,19 +41,20 @@ class QuestionService {
 
     save = async (question) => {
         let newQs = await this.questionRepository.save(question);
-        for (let i = 0; i < question.answers.length; i++) {
-            question.answers[i].question = newQs;
-            await answerService.save(question.answers[i])
-        }
+        await answerService.batchSave(newQs, question.answers)
         return newQs;
     }
 
     update = async (id, question) => {
         await this.questionRepository.update({id: id}, question);
+        await answerService.deleteByQuestion(id);
+        await answerService.batchSave(id, question.answers);
     }
 
     delete = async (id) => {
+        await answerService.deleteByQuestion(id);
         await this.questionRepository.delete({id: id});
+
     }
 
 }
