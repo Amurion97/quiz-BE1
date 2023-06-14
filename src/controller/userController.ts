@@ -202,7 +202,7 @@ class UserController {
             } else {
                 res.status(404).json({
                     success: false,
-                    data: "OTP incorrect"
+                    data: "OTP incorrect or expired"
                 });
             }
         } catch (e) {
@@ -226,7 +226,7 @@ class UserController {
             } else {
                 res.status(404).json({
                     success: false,
-                    data: "OTP incorrect"
+                    data: "OTP incorrect or expired"
                 });
             }
         } catch (e) {
