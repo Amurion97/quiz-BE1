@@ -10,6 +10,9 @@ class DifficultyService {
             }
         })
     }
+    one = async (id) => {
+        return await this.difficultyRepository.findOneBy({id: id})
+    }
 
     save = async (difficulty) => {
         console.log(await this.difficultyRepository.save(difficulty))

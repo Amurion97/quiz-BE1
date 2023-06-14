@@ -10,7 +10,9 @@ class TypeService {
             }
         })
     }
-
+    one = async (id) => {
+        return await this.typeRepository.findOneBy({id: id})
+    }
     save = async (type) => {
         console.log(await this.typeRepository.save(type))
     }
