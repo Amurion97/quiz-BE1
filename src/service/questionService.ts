@@ -1,5 +1,5 @@
 import {AppDataSource} from "../data-source";
-import {ArrayContainedBy, ArrayContains, Between, Equal, IsNull, Like, Not} from "typeorm";
+import {Any, ArrayContainedBy, ArrayContains, ArrayOverlap, Between, Equal, IsNull, Like, Not} from "typeorm";
 import {Question} from "../entity/Question";
 import answerService from "./answerService";
 import {In} from "typeorm"
@@ -26,7 +26,7 @@ class QuestionService {
             queries.selectedTypesIDs = [];
         }
         if (!queries.selectedTagIDs) {
-            queries.selectedTagIDs = [];
+            queries.selectedTagIDs =[];
         }
         return await this.questionRepository.find({
             where: {
@@ -41,7 +41,7 @@ class QuestionService {
                 //     id: queries.selectedTagIDs.length > 0 ? In(queries.selectedTagIDs) : Not(IsNull())
                 // },
                 tags: {
-                    id: queries.selectedTagIDs.length > 0 ? ArrayContainedBy(queries.selectedTagIDs) : Not(IsNull())
+                    id: queries.selectedTagIDs.length > 0 ?  ArrayOverlap(queries.selectedTagIDs) : Not(IsNull())
                 },
                 // tags: queries.selectedTagIDs.length > 0 ? ArrayContains(queries.selectedTagIDs) : Not(IsNull())
                 // ,

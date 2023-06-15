@@ -5,7 +5,7 @@ import questionService from "../service/questionService";
 class QuestionController {
     all = async (req: Request, res: Response) => {
         try {
-            let questions = await questionService.all2(req.query)
+            let questions = await questionService.all(req.query)
             res.status(201).json({
                 data: questions,
                 success: true
