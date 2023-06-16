@@ -23,6 +23,6 @@ AppDataSource.initialize().then(async () => {
 
     let current = new Date(Date.now())
     console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
-    Open http://${hostname}:${port}/v1/airports to see results`)
+    Open http://${hostname}:${port}/v1/questions to see results`)
 
 }).catch(error => console.log(error))
