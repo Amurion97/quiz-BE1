@@ -1,6 +1,5 @@
 import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Role} from "./Role";
-import {Booking} from "./Booking";
 
 @Entity()
 export class User {
