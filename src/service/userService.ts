@@ -116,6 +116,14 @@ class UserService {
         return !!(user);
     }
     all = async () => {
+        return this.userRepository.find({
+            relations: {
+                role: true
+            },
+            where: {
+                isDeleted: false
+            }
+        })
         return await AppDataSource.createQueryBuilder()
             .select('user')
             .from(User, 'user')
@@ -123,7 +131,8 @@ class UserService {
             .getMany();
     }
     delete = async (id) => {
-        await this.userRepository.delete({id: id});
+        await this.userRepository.update({id: id}, {isDeleted: true});
+        // await this.userRepository.delete({id: id});
     }
 
     passwordResetRequest = async (email) => {

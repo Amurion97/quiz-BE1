@@ -129,9 +129,6 @@ class QuestionService {
                 }
             }
         }));
-        let answers = question.answers;
-        // question.answers = null;
-        // await this.questionRepository.update({id: id}, question);
 
         await answerService.batchSave(id, question.answers);
     }
