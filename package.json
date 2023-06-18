@@ -1,5 +1,5 @@
 {
-   "name": "BE2",
+   "name": "be2",
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "type": "commonjs",
@@ -25,7 +25,8 @@
       "otp-generator": "^4.0.1",
       "qs": "^6.11.2",
       "reflect-metadata": "^0.1.13",
-      "typeorm": "^0.3.15"
+      "typeorm": "^0.3.15",
+      "typeorm-naming-strategies": "^4.1.0"
    },
    "scripts": {
       "start": "nodemon src/index.ts",

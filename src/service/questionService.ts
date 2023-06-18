@@ -11,6 +11,9 @@ import {query} from "express";
 class QuestionService {
     private questionRepository = AppDataSource.getRepository(Question);
     private whereOptions = (query) => {
+        const tagCondition = (query.selectedTagIDs.length > 0) ? {
+            tags: In(query.selectedTagIDs)
+        } : {}
         return {
             where: {
                 content: query.content ? Like(`%${query.content}%`) : Not(IsNull()),
@@ -23,9 +26,7 @@ class QuestionService {
                 // tags: {
                 //     id: queries.selectedTagIDs.length > 0 ? In(queries.selectedTagIDs) : Not(IsNull())
                 // },
-                tags: {
-                    id: query.selectedTagIDs.length > 0 ? In(query.selectedTagIDs) : Not(IsNull())
-                },
+                ...tagCondition
                 // tags: queries.selectedTagIDs.length > 0 ? ArrayContains(queries.selectedTagIDs) : Not(IsNull())
                 // ,
             },
