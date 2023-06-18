@@ -33,5 +33,4 @@ export class User {
         default: 0
     })
     isLocked: boolean;
-
 }
