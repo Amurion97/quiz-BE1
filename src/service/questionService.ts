@@ -1,34 +1,38 @@
 import {AppDataSource} from "../data-source";
-import {Any, ArrayContainedBy, ArrayContains, ArrayOverlap, Between, Equal, IsNull, Like, Not} from "typeorm";
+import {Like, In} from "typeorm";
 import {Question} from "../entity/Question";
 import answerService from "./answerService";
-import {In} from "typeorm"
 import {Answer} from "../entity/Answer";
 import difficultyService from "./difficultyService";
 import typeService from "./typeService";
-import {query} from "express";
 
 class QuestionService {
     private questionRepository = AppDataSource.getRepository(Question);
     private whereOptions = (query) => {
+        const contentCondition = query.content ? {
+            content: Like(`%${query.content}%`)
+        } : {}
+        const difficultyCondition = query.difficultiesIDs.length > 0 ? {
+            difficulty: {
+                id: In(query.difficultiesIDs)
+            }
+        } : {}
+        const typeCondition = query.selectedTypesIDs.length > 0 ? {
+            type: {
+                id: In(query.selectedTypesIDs)
+            }
+        } : {}
         const tagCondition = (query.selectedTagIDs.length > 0) ? {
-            tags: In(query.selectedTagIDs)
+            tags: {
+                id: In(query.selectedTagIDs)
+            }
         } : {}
         return {
             where: {
-                content: query.content ? Like(`%${query.content}%`) : Not(IsNull()),
-                difficulty: {
-                    id: query.difficultiesIDs.length > 0 ? In(query.difficultiesIDs) : Not(IsNull())
-                },
-                type: {
-                    id: query.selectedTypesIDs.length > 0 ? In(query.selectedTypesIDs) : Not(IsNull())
-                },
-                // tags: {
-                //     id: queries.selectedTagIDs.length > 0 ? In(queries.selectedTagIDs) : Not(IsNull())
-                // },
-                ...tagCondition
-                // tags: queries.selectedTagIDs.length > 0 ? ArrayContains(queries.selectedTagIDs) : Not(IsNull())
-                // ,
+                ...contentCondition,
+                ...difficultyCondition,
+                ...typeCondition,
+                ...tagCondition,
             },
         }
     }
@@ -49,7 +53,7 @@ class QuestionService {
     all = async (query) => {
         console.log("queries:", query);
         this.queryProcess(query)
-        return await this.questionRepository.findAndCount({
+        const [questions, questionCount] = await this.questionRepository.findAndCount({
             ...this.whereOptions(query),
             select: {},
             relations: {
@@ -64,6 +68,7 @@ class QuestionService {
             skip: query.page && query.rows ? (query.page - 1) * query.rows : 0,
             take: query.rows ? query.rows : 10,
         })
+        return {questions: questions, questionCount: questionCount}
     }
 
     one = async (id) => {
