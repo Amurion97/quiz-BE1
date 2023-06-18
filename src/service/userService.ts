@@ -29,12 +29,6 @@ class UserService {
         await this.userRepository.save(user);
     }
     loginCheck = async (user) => {
-        // let foundUser = await AppDataSource.createQueryBuilder()
-        //     .select("user")
-        //     .from(User, "user")
-        //     .where("user.username = :username", {username: user.username})
-        //     .innerJoinAndSelect("user.role", "role")
-        //     .getOne()
         let foundUser = await this.userRepository.findOne({
             relations: {
                 role: true
@@ -74,10 +68,14 @@ class UserService {
     }
 
     one = async (userId) => {
-        let userFind = await this.userRepository.findOneBy({
-            id: userId
+        return await this.userRepository.findOne({
+            where: {
+                id: userId
+            },
+            relations: {
+                role: true
+            }
         })
-        return userFind;
     }
 
     oneByEmail = async (email: string) => {
