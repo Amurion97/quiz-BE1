@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
     username: "root",
     password: "123456",
     database: "quiz2",
-    synchronize: true,
+    synchronize: false,
     logging: false,
     // entities: ["entity/*.ts"],
     // entities: [__dirname + '/../**/*.entity.{js,ts}'],
