@@ -53,7 +53,6 @@ class TestService {
         const [tests, testCount] = await this.testRepository.findAndCount({
             ...this.whereOptions(query),
             relations: {
-                type: true,
                 tags: true,
                 difficulty: true,
             },
@@ -72,14 +71,17 @@ class TestService {
                 id: id
             },
             relations: {
-                type: true,
                 tags: true,
                 difficulty: true,
-                details: true
+                details: {
+                    question: {
+                        answers: true
+                    }
+                }
             },
             order: {
                 details: {
-                    no: "ASC"
+                    no: "ASC",
                 }
             },
         },)

@@ -11,8 +11,6 @@ export class Test {
     @Column()
     name: string;
 
-    @ManyToOne(() => Type, (type) => type.questions)
-    type: Type;
     @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
     difficulty: Difficulty;
     @ManyToMany(() => Tag, (tag) => tag.questions,
