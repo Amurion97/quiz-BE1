@@ -5,7 +5,7 @@ import router from "./router/router";
 import * as cors from 'cors';
 
 const hostname = '127.0.0.1';
-const port = 8000;
+const port = 8001;
 const FE_SERVER_PORT = 3000;
 
 

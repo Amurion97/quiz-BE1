@@ -28,6 +28,13 @@ class UserService {
         user.role = 3;
         await this.userRepository.save(user);
     }
+    saveUser = async (user, email) => {
+        let hashedPassword = bcrypt.hashSync(user.password, 10);
+        user.email = email;
+        user.password = hashedPassword;
+        user.role = 3;
+        await this.userRepository.save(user);
+    }
     loginCheck = async (user) => {
         // let foundUser = await AppDataSource.createQueryBuilder()
         //     .select("user")
@@ -81,6 +88,7 @@ class UserService {
     }
 
     oneByEmail = async (email: string) => {
+        console.log( email,"day la email")
         return await this.userRepository.findOneBy({
             email: email
         });
@@ -107,6 +115,7 @@ class UserService {
     }
 
     checkUsedEmail = async (email) => {
+
         let user = await this.userRepository.findOne({
             where: {
                 email: email,

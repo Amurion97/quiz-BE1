@@ -1,8 +1,8 @@
 import userService from "../service/userService";
-import { Request, Response } from "express";
-import { decode } from "punycode";
+import {Request, Response} from "express";
+import {decode} from "punycode";
 import * as bcrypt from "bcrypt";
-import { log } from "console";
+import {log} from "console";
 
 class UserController {
     register = async (req: Request, res: Response) => {
@@ -243,10 +243,27 @@ class UserController {
             });
         }
     };
+
     loginWithGoogle = async (req: Request, res: Response) => {
-    
-        console.log("data user: ", req.body);
+        let payload = req['decode'];
+        if (payload) {
+            if (payload.isLocked) {
+                res.status(403).json({
+                    message: "Locked account",
+                    success: false,
+                });
+            } else {
+                res.status(200).json({
+                    success: true,
+                    data: payload,
+                });
+            }
+        } else {
+            throw new Error("Wrong email or password");
+        }
+
     };
+
 }
 
 export default new UserController();
