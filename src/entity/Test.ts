@@ -14,6 +14,8 @@ export class Test {
         nullable: true
     })
     image: string;
+    @Column()
+    time: number;
 
     @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
     difficulty: Difficulty;
