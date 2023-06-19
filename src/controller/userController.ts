@@ -1,35 +1,33 @@
 import userService from "../service/userService";
-import {Request, Response} from "express";
-import {decode} from "punycode";
+import { Request, Response } from "express";
+import { decode } from "punycode";
 import * as bcrypt from "bcrypt";
+import { log } from "console";
 
 class UserController {
-
     register = async (req: Request, res: Response) => {
         try {
-            let check = await userService.checkUsedEmail(req.body.email)
+            let check = await userService.checkUsedEmail(req.body.email);
             if (!check) {
                 await userService.save(req.body);
                 await res.status(201).json({
                     success: true,
-                    data: req.body.email
+                    data: req.body.email,
                 });
             } else {
                 await res.status(409).json({
                     success: false,
-                    message: 'Used email'
+                    message: "Used email",
                 });
             }
         } catch (e) {
-            console.log("error in signup:", e)
+            console.log("error in signup:", e);
             await res.status(500).json({
-                message: 'error in signup',
-                success: false
-            })
+                message: "error in signup",
+                success: false,
+            });
         }
-
-    }
-
+    };
 
     login = async (req: Request, res: Response) => {
         try {
@@ -39,59 +37,57 @@ class UserController {
                 if (payload.isLocked) {
                     res.status(403).json({
                         message: "Locked account",
-                        success: false
-                    })
+                        success: false,
+                    });
                 } else {
                     res.status(200).json({
                         success: true,
-                        data: payload
+                        data: payload,
                     });
                 }
             } else {
-                throw new Error("Wrong email or password")
+                throw new Error("Wrong email or password");
             }
         } catch (e) {
-            console.log("error in login:", e)
+            console.log("error in login:", e);
             res.status(401).json({
                 message: e.message,
-                success: false
-            })
+                success: false,
+            });
         }
-
-
-    }
+    };
     all = async (req: Request, res: Response) => {
-        console.log("check ", req["decode"])
+        console.log("check ", req["decode"]);
         try {
             let users = await userService.all();
             res.status(201).json({
                 success: true,
-                data: users
+                data: users,
             });
         } catch (e) {
-            console.log("error in get all user:", e)
+            console.log("error in get all user:", e);
             res.status(500).json({
-                message: 'error in get all user',
-                success: false
-            })
+                message: "error in get all user",
+                success: false,
+            });
         }
-    }
+    };
     showUser = async (req: Request, res: Response) => {
         try {
             let userId = req.params.id;
-            let user = await userService.one(userId)
+            let user = await userService.one(userId);
             res.status(201).json({
                 success: true,
-                data: user
+                data: user,
             });
         } catch (e) {
-            console.log("error in showUser:", e)
+            console.log("error in showUser:", e);
             res.status(500).json({
-                message: 'error in showUser',
-                success: false
-            })
+                message: "error in showUser",
+                success: false,
+            });
         }
-    }
+    };
 
     // editUser = async (req: Request, res: Response) => {
     //     try {
@@ -111,132 +107,146 @@ class UserController {
         let id = req["decode"]["id"];
         let user = await userService.one(id);
         let userPassword = user.password;
-        bcrypt.compare(req.body.password, userPassword, async function (err, result) {
-            if (result === true) {
-                try {
-                    let user = req.body;
-                    let id = req["decode"]["id"];
-                    let newUser = await userService.updatePassword(id, user);
-                    res.status(201).json(newUser);
-                } catch (e) {
+        bcrypt.compare(
+            req.body.password,
+            userPassword,
+            async function (err, result) {
+                if (result === true) {
+                    try {
+                        let user = req.body;
+                        let id = req["decode"]["id"];
+                        let newUser = await userService.updatePassword(
+                            id,
+                            user
+                        );
+                        res.status(201).json(newUser);
+                    } catch (e) {
+                        res.status(500).json({
+                            message: "error in editUser",
+                            success: false,
+                        });
+                    }
+                } else {
                     res.status(500).json({
-                        message: 'error in editUser',
-                        success: false
-                    })
+                        message: "error in editUser",
+                        success: false,
+                    });
                 }
-            } else {
-                res.status(500).json({
-                    message: 'error in editUser',
-                    success: false
-                })
             }
-        });
-
-
-    }
+        );
+    };
     updateRoleOfUser = async (req: Request, res: Response) => {
         try {
             let id = req.params.id;
-            await userService.updateRoleOfUser(id)
+            await userService.updateRoleOfUser(id);
             res.status(201).json({
-                messege: "update role success"
+                messege: "update role success",
             });
         } catch (e) {
-            console.log("error in updateRoleOfUser:", e)
+            console.log("error in updateRoleOfUser:", e);
             res.status(500).json({
-                message: 'error in updateRoleOfUser',
-                success: false
-            })
+                message: "error in updateRoleOfUser",
+                success: false,
+            });
         }
-    }
+    };
 
     delete = async (req: Request, res: Response) => {
         try {
             await userService.delete(req.params.id);
             res.status(200).json({
                 success: true,
-                data: 'delete user success!'
+                data: "delete user success!",
             });
         } catch (e) {
-            console.log("error in delete user:", e)
+            console.log("error in delete user:", e);
             res.status(500).json({
-                message: 'error in delete user',
-                success: false
-            })
+                message: "error in delete user",
+                success: false,
+            });
         }
-    }
+    };
 
     passwordResetRequest = async (req: Request, res: Response) => {
         try {
             console.log("user reset password:", req.body);
-            let success = await userService.passwordResetRequest(req.body.email);
+            let success = await userService.passwordResetRequest(
+                req.body.email
+            );
             if (success) {
                 res.status(200).json({
                     success: true,
-                    data: "Email sent"
+                    data: "Email sent",
                 });
             } else {
                 res.status(404).json({
                     success: false,
-                    data: "Email not found"
+                    data: "Email not found",
                 });
             }
         } catch (e) {
-            console.log("error while password reset:", e)
+            console.log("error while password reset:", e);
             res.status(500).json({
                 message: "Error while password reset",
-                success: false
-            })
+                success: false,
+            });
         }
-    }
+    };
 
     OTPCheck = async (req: Request, res: Response) => {
         try {
             console.log("user OTP check:", req.body);
-            let success = await userService.OTPCheck(req.body.email, req.body.OTP);
+            let success = await userService.OTPCheck(
+                req.body.email,
+                req.body.OTP
+            );
             if (success) {
                 res.status(200).json({
                     success: true,
-                    data: "OTP correct"
+                    data: "OTP correct",
                 });
             } else {
                 res.status(404).json({
                     success: false,
-                    data: "OTP incorrect or expired"
+                    data: "OTP incorrect or expired",
                 });
             }
         } catch (e) {
-            console.log("error while password reset:", e)
+            console.log("error while password reset:", e);
             res.status(500).json({
                 message: "Error while password reset",
-                success: false
-            })
+                success: false,
+            });
         }
-    }
+    };
 
     resetPassword = async (req: Request, res: Response) => {
         try {
             console.log("user reset password:", req.body);
-            let success = await userService.resetPassword( req.body);
+            let success = await userService.resetPassword(req.body);
             if (success) {
                 res.status(200).json({
                     success: true,
-                    data: "Password reset"
+                    data: "Password reset",
                 });
             } else {
                 res.status(404).json({
                     success: false,
-                    data: "OTP incorrect or expired"
+                    data: "OTP incorrect or expired",
                 });
             }
         } catch (e) {
-            console.log("error while password reset:", e)
+            console.log("error while password reset:", e);
             res.status(500).json({
                 message: "Error while password reset",
-                success: false
-            })
+                success: false,
+            });
         }
-    }
+    };
+    loginWithGoogle = async (req: Request, res: Response) => {
+    
+        console.log("data user: ", req.body);
+    };
 }
 
 export default new UserController();

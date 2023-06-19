@@ -28,6 +28,7 @@ class QuestionService {
         if (!queries.selectedTagIDs) {
             queries.selectedTagIDs =[];
         }
+
         return await this.questionRepository.find({
             where: {
                 content: queries.content ? Like(`%${queries.content}%`) : Not(IsNull()),
@@ -37,12 +38,12 @@ class QuestionService {
                 type: {
                     id: queries.selectedTypesIDs.length > 0 ? In(queries.selectedTypesIDs) : Not(IsNull())
                 },
-                // tags: {
-                //     id: queries.selectedTagIDs.length > 0 ? In(queries.selectedTagIDs) : Not(IsNull())
-                // },
                 tags: {
-                    id: queries.selectedTagIDs.length > 0 ?  ArrayOverlap(queries.selectedTagIDs) : Not(IsNull())
+                    id: queries.selectedTagIDs.length > 0 ? In(queries.selectedTagIDs) : Not(IsNull())
                 },
+                // tags: {
+                //     id: queries.selectedTagIDs.length > 0 ?  ArrayOverlap(queries.selectedTagIDs) : Not(IsNull())
+                // },
                 // tags: queries.selectedTagIDs.length > 0 ? ArrayContains(queries.selectedTagIDs) : Not(IsNull())
                 // ,
             },
@@ -55,10 +56,9 @@ class QuestionService {
             },
             order: {
                 id: "ASC",
-
             },
-            // skip: queries.skip? queries.skip : 0,
-            // take: 10
+            skip: queries.skip? queries.skip : 0,
+            take: 10
         })
     }
     one = async (id) => {
