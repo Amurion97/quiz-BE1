@@ -1,52 +1,60 @@
 import {AppDataSource} from "../data-source";
-import {Any, ArrayContainedBy, ArrayContains, ArrayOverlap, Between, Equal, IsNull, Like, Not} from "typeorm";
+import {Like, In} from "typeorm";
 import {Question} from "../entity/Question";
 import answerService from "./answerService";
-import {In} from "typeorm"
+import {Answer} from "../entity/Answer";
+import difficultyService from "./difficultyService";
+import typeService from "./typeService";
 
 class QuestionService {
     private questionRepository = AppDataSource.getRepository(Question);
-    all2 = async (queries) => {
-        console.log("queries:", queries);
-        if (!queries.selectedTagIDs) {
-            queries.selectedTagIDs = [];
-        }
-        return await AppDataSource.createQueryBuilder()
-            .from(Question, "question")
-            .leftJoinAndSelect("question.tags", "tag")
-            .where('question.tags @> ARRAY[:...tagList]', { tagList: queries.selectedTagIDs})
-            .getMany()
-    }
-    all = async (queries) => {
-        console.log("queries:", queries);
-        if (!queries.difficultiesIDs) {
-            queries.difficultiesIDs = [];
-        }
-        if (!queries.selectedTypesIDs) {
-            queries.selectedTypesIDs = [];
-        }
-        if (!queries.selectedTagIDs) {
-            queries.selectedTagIDs =[];
-        }
-
-        return await this.questionRepository.find({
+    private whereOptions = (query) => {
+        const contentCondition = query.content ? {
+            content: Like(`%${query.content}%`)
+        } : {}
+        const difficultyCondition = query.difficultiesIDs.length > 0 ? {
+            difficulty: {
+                id: In(query.difficultiesIDs)
+            }
+        } : {}
+        const typeCondition = query.selectedTypesIDs.length > 0 ? {
+            type: {
+                id: In(query.selectedTypesIDs)
+            }
+        } : {}
+        const tagCondition = (query.selectedTagIDs.length > 0) ? {
+            tags: {
+                id: In(query.selectedTagIDs)
+            }
+        } : {}
+        return {
             where: {
-                content: queries.content ? Like(`%${queries.content}%`) : Not(IsNull()),
-                difficulty: {
-                    id: queries.difficultiesIDs.length > 0 ? In(queries.difficultiesIDs) : Not(IsNull())
-                },
-                type: {
-                    id: queries.selectedTypesIDs.length > 0 ? In(queries.selectedTypesIDs) : Not(IsNull())
-                },
-                tags: {
-                    id: queries.selectedTagIDs.length > 0 ? In(queries.selectedTagIDs) : Not(IsNull())
-                },
-                // tags: {
-                //     id: queries.selectedTagIDs.length > 0 ?  ArrayOverlap(queries.selectedTagIDs) : Not(IsNull())
-                // },
-                // tags: queries.selectedTagIDs.length > 0 ? ArrayContains(queries.selectedTagIDs) : Not(IsNull())
-                // ,
+                ...contentCondition,
+                ...difficultyCondition,
+                ...typeCondition,
+                ...tagCondition,
             },
+        }
+    }
+
+    private queryProcess = (query) => {
+        if (!query.difficultiesIDs) {
+            query.difficultiesIDs = [];
+        }
+        if (!query.selectedTypesIDs) {
+            query.selectedTypesIDs = [];
+        }
+        if (!query.selectedTagIDs) {
+            query.selectedTagIDs = [];
+        }
+        query.page = query.page ? parseInt(query.page) : undefined;
+        query.rows = query.rows ? parseInt(query.rows) : undefined;
+    }
+    all = async (query) => {
+        console.log("queries:", query);
+        this.queryProcess(query)
+        const [questions, questionCount] = await this.questionRepository.findAndCount({
+            ...this.whereOptions(query),
             select: {},
             relations: {
                 answers: true,
@@ -57,19 +65,28 @@ class QuestionService {
             order: {
                 id: "ASC",
             },
-            skip: queries.skip? queries.skip : 0,
-            take: 10
+            skip: query.page && query.rows ? (query.page - 1) * query.rows : 0,
+            take: query.rows ? query.rows : 10,
         })
+        return {questions: questions, questionCount: questionCount}
     }
+
     one = async (id) => {
         return await this.questionRepository.findOne({
             where: {
                 id: id
             },
             relations: {
-                answers: true
+                answers: true,
+                type: true,
+                tags: true,
+                difficulty: true,
             },
-            order: {},
+            order: {
+                answers: {
+                    id: "ASC"
+                }
+            },
         },)
     }
 
@@ -80,8 +97,53 @@ class QuestionService {
     }
 
     update = async (id, question) => {
-        await this.questionRepository.update({id: id}, question);
+        question.trueIndex = undefined;
+        question.trueIndexes = undefined;
+        let targetQuestion = await this.questionRepository.findOne({
+            relations: {
+                tags: true
+            },
+            where: {
+                id: id
+            }
+        })
+        // targetQuestion.tags = question.tags;
+        targetQuestion.tags = targetQuestion.tags.filter(item => false);
+        targetQuestion.content = question.content;
+        targetQuestion.difficulty = await difficultyService.one(question.difficulty)
+        targetQuestion.type = await typeService.one(question.type)
+
+        await AppDataSource.manager.save(targetQuestion);
+
+        targetQuestion = await this.questionRepository.findOne({
+            relations: {
+                tags: true
+            },
+            where: {
+                id: id
+            }
+        })
+        // await this.questionRepository.update({id: id}, {tags: []})
+        console.log("removed tags!:", targetQuestion)
+
+        targetQuestion.tags = question.tags;
+        await AppDataSource.manager.save(targetQuestion);
+        console.log("tags added")
+
+        question.tags = undefined;
         await answerService.deleteByQuestion(id);
+        console.log("answers deleted");
+        console.log(await AppDataSource.getRepository(Answer).find({
+            relations: {
+                question: true
+            },
+            where: {
+                question: {
+                    id: id
+                }
+            }
+        }));
+
         await answerService.batchSave(id, question.answers);
     }
 

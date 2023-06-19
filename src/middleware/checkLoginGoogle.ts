@@ -9,10 +9,11 @@ export const checkLoginWithGoogle = async (req, res, next) => {
     if (email) {
         let user = await userService.oneByEmail(email);
         if (user) {
-            req.decode = payload;
             return next();
         } else {
-
+            res.status(401).json({
+                message: 'You must be an administrator'
+            })
         }
     }
 

@@ -36,12 +36,6 @@ class UserService {
         await this.userRepository.save(user);
     }
     loginCheck = async (user) => {
-        // let foundUser = await AppDataSource.createQueryBuilder()
-        //     .select("user")
-        //     .from(User, "user")
-        //     .where("user.username = :username", {username: user.username})
-        //     .innerJoinAndSelect("user.role", "role")
-        //     .getOne()
         let foundUser = await this.userRepository.findOne({
             relations: {
                 role: true
@@ -79,16 +73,52 @@ class UserService {
         }
         throw new Error("Email not found")
     }
-
-    one = async (userId) => {
-        let userFind = await this.userRepository.findOneBy({
-            id: userId
+    loginCheckByGoogle = async (email) => {
+        let foundUser = await this.userRepository.findOne({
+            relations: {
+                role: true
+            },
+            where: {
+                email: email,
+            }
         })
-        return userFind;
+        // console.log("foundUser:", foundUser)
+        if (foundUser) {
+            if (foundUser.isLocked) {
+                return {
+                    isLocked: true
+                }
+            }
+            let payload = {
+                id: foundUser.id,
+                email: foundUser.email,
+                role: foundUser.role.id
+            }
+            return {
+                info: {
+                    email: foundUser.email,
+                    role: foundUser.role.id,
+                    name: foundUser.name
+                },
+                token: jwt.sign(payload, SECRET, {
+                    expiresIn: '1h'
+                })
+            }
+        }
+        throw new Error("Email not found")
+    }
+    one = async (userId) => {
+        return await this.userRepository.findOne({
+            where: {
+                id: userId
+            },
+            relations: {
+                role: true
+            }
+        })
     }
 
     oneByEmail = async (email: string) => {
-        console.log( email,"day la email")
         return await this.userRepository.findOneBy({
             email: email
         });
@@ -125,6 +155,14 @@ class UserService {
         return !!(user);
     }
     all = async () => {
+        return this.userRepository.find({
+            relations: {
+                role: true
+            },
+            where: {
+                isDeleted: false
+            }
+        })
         return await AppDataSource.createQueryBuilder()
             .select('user')
             .from(User, 'user')
@@ -132,7 +170,8 @@ class UserService {
             .getMany();
     }
     delete = async (id) => {
-        await this.userRepository.delete({id: id});
+        await this.userRepository.update({id: id}, {isDeleted: true});
+        // await this.userRepository.delete({id: id});
     }
 
     passwordResetRequest = async (email) => {

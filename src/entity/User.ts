@@ -1,8 +1,7 @@
 import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Role} from "./Role";
-import {Booking} from "./Booking";
 
-@Entity()
+@Entity("users")
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -34,5 +33,4 @@ export class User {
         default: 0
     })
     isLocked: boolean;
-
 }

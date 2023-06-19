@@ -3,6 +3,7 @@ import {Request, Response} from "express";
 import {decode} from "punycode";
 import * as bcrypt from "bcrypt";
 import {log} from "console";
+import * as jwt from 'jsonwebtoken'
 
 class UserController {
     register = async (req: Request, res: Response) => {
@@ -245,25 +246,33 @@ class UserController {
     };
 
     loginWithGoogle = async (req: Request, res: Response) => {
-        let payload = req['decode'];
-        if (payload) {
-            if (payload.isLocked) {
-                res.status(403).json({
-                    message: "Locked account",
-                    success: false,
-                });
+        try {
+            let payload = jwt.decode(req.body['credential']);
+            let email = payload.email;
+            let user = await userService.loginCheckByGoogle(email);
+            if (user) {
+                if (user.isLocked) {
+                    res.status(403).json({
+                        message: "Locked account",
+                        success: false,
+                    });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        data: user,
+                    });
+                }
             } else {
-                res.status(200).json({
-                    success: true,
-                    data: payload,
-                });
+                throw new Error("Wrong email or password");
             }
-        } else {
-            throw new Error("Wrong email or password");
+        } catch (e) {
+            console.log("error in login:", e);
+            res.status(401).json({
+                message: e.message,
+                success: false,
+            });
         }
-
     };
-
 }
 
 export default new UserController();

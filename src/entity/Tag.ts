@@ -1,7 +1,7 @@
 import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Question} from "./Question";
 
-@Entity()
+@Entity("tags")
 export class Tag {
     @PrimaryGeneratedColumn()
     id: number;

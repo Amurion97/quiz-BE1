@@ -4,7 +4,7 @@ import {Difficulty} from "./Difficulty";
 import {Answer} from "./Answer";
 import {Tag} from "./Tag";
 
-@Entity()
+@Entity("questions")
 export class Question {
     @PrimaryGeneratedColumn()
     id: number;
@@ -15,7 +15,10 @@ export class Question {
     type: Type;
     @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
     difficulty: Difficulty;
-    @ManyToMany(() => Tag, (tag) => tag.questions)
+    @ManyToMany(() => Tag, (tag) => tag.questions,
+        {
+            cascade: true,
+        })
     @JoinTable()
     tags: Tag[]
     @OneToMany(() => Answer, (answer) => answer.question)
