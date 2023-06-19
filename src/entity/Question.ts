@@ -10,6 +10,10 @@ export class Question {
     id: number;
     @Column()
     content: string;
+    @Column({
+        nullable: true
+    })
+    image: string;
 
     @ManyToOne(() => Type, (type) => type.questions)
     type: Type;

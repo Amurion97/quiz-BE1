@@ -10,6 +10,10 @@ export class Test {
     id: number;
     @Column()
     name: string;
+    @Column({
+        nullable: true
+    })
+    image: string;
 
     @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
     difficulty: Difficulty;
