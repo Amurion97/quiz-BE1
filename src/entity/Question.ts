@@ -4,7 +4,7 @@ import {Difficulty} from "./Difficulty";
 import {Answer} from "./Answer";
 import {Tag} from "./Tag";
 
-@Entity()
+@Entity("questions")
 export class Question {
     @PrimaryGeneratedColumn()
     id: number;
