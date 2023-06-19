@@ -28,6 +28,14 @@ class UserService {
         user.role = 3;
         await this.userRepository.save(user);
     }
+    saveUserByGoogle = async (email,password,role) => {
+        let hashedPassword = bcrypt.hashSync(password, 10);
+        let user=new User();
+        user.password = hashedPassword;
+        user.role = role;
+        user.email=email;
+        await this.userRepository.save(user);
+    }
     saveUser = async (user, email) => {
         let hashedPassword = bcrypt.hashSync(user.password, 10);
         user.email = email;

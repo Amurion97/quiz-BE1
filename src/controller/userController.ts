@@ -4,6 +4,7 @@ import {decode} from "punycode";
 import * as bcrypt from "bcrypt";
 import {log} from "console";
 import * as jwt from 'jsonwebtoken'
+import {User} from "../entity/User";
 
 class UserController {
     register = async (req: Request, res: Response) => {
@@ -262,8 +263,6 @@ class UserController {
                         data: user,
                     });
                 }
-            } else {
-                throw new Error("Wrong email or password");
             }
         } catch (e) {
             console.log("error in login:", e);
@@ -274,5 +273,6 @@ class UserController {
         }
     };
 }
+
 
 export default new UserController();
