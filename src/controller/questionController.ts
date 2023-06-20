@@ -37,12 +37,19 @@ class QuestionController {
     save = async (req: Request, res: Response) => {
         try {
             console.log(req.body)
-            await questionService.save(req.body);
+            let question = await questionService.save(req.body);
+            if (question) {
+                res.status(201).json({
+                    success: true,
+                    data: 'Add question success!'
+                });
+            } else {
+                res.status(409).json({
+                    success: false,
+                    message: 'Duplicated question content'
+                });
+            }
 
-            res.status(201).json({
-                success: true,
-                data: 'Add question success!'
-            });
         } catch (e) {
             console.log("error in add question:", e)
             res.status(500).json({

@@ -91,6 +91,12 @@ class QuestionService {
     }
 
     save = async (question) => {
+        let foundQs = await this.questionRepository.findOneBy({
+            content: question.content
+        })
+        if (foundQs) {
+            return false
+        }
         let newQs = await this.questionRepository.save(question);
         await answerService.batchSave(newQs, question.answers)
         return newQs;

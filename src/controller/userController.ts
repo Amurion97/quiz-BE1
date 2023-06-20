@@ -10,19 +10,19 @@ class UserController {
             let check = await userService.checkUsedEmail(req.body.email)
             if (!check) {
                 await userService.save(req.body);
-                await res.status(201).json({
+                res.status(201).json({
                     success: true,
                     data: req.body.email
                 });
             } else {
-                await res.status(409).json({
+                res.status(409).json({
                     success: false,
                     message: 'Used email'
                 });
             }
         } catch (e) {
             console.log("error in signup:", e)
-            await res.status(500).json({
+            res.status(500).json({
                 message: 'error in signup',
                 success: false
             })
