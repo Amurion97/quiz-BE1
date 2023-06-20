@@ -1,8 +1,8 @@
 import {Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {Type} from "./Type";
 import {Difficulty} from "./Difficulty";
 import {Tag} from "./Tag";
 import {TestDetails} from "./TestDetails";
+import {Attempt} from "./Attempt";
 
 @Entity("tests")
 export class Test {
@@ -28,4 +28,7 @@ export class Test {
 
     @OneToMany(() => TestDetails, (detail) => detail.test)
     details: TestDetails
+
+    @OneToMany(() => Attempt, (attempt) => attempt.test)
+    attempts: Attempt[]
 }

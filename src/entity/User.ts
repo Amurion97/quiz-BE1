@@ -1,5 +1,6 @@
 import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Role} from "./Role";
+import {Attempt} from "./Attempt";
 
 @Entity("users")
 export class User {
@@ -28,6 +29,9 @@ export class User {
     OTP: string;
     @Column({nullable: true})
     OTPGenTime: Date;
+
+    @OneToMany(() => Attempt, (attempt) => attempt.user)
+    attempts: Attempt[]
 //will delete later
     @Column({
         default: 0
