@@ -75,7 +75,8 @@ class TestService {
                 difficulty: true,
                 details: {
                     question: {
-                        answers: true
+                        answers: true,
+                        type: true
                     }
                 }
             },
