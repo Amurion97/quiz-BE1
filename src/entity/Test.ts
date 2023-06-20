@@ -1,22 +1,20 @@
 import {Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Type} from "./Type";
 import {Difficulty} from "./Difficulty";
-import {Answer} from "./Answer";
 import {Tag} from "./Tag";
+import {TestDetails} from "./TestDetails";
 
-@Entity("questions")
-export class Question {
+@Entity("tests")
+export class Test {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()
-    content: string;
+    name: string;
     @Column({
         nullable: true
     })
     image: string;
 
-    @ManyToOne(() => Type, (type) => type.questions)
-    type: Type;
     @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
     difficulty: Difficulty;
     @ManyToMany(() => Tag, (tag) => tag.questions,
@@ -25,6 +23,7 @@ export class Question {
         })
     @JoinTable()
     tags: Tag[]
-    @OneToMany(() => Answer, (answer) => answer.question)
-    answers: Answer[]
+
+    @OneToMany(() => TestDetails, (detail) => detail.test)
+    details: TestDetails
 }
