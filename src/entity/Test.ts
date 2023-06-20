@@ -27,7 +27,7 @@ export class Test {
     tags: Tag[]
 
     @OneToMany(() => TestDetails, (detail) => detail.test)
-    details: TestDetails
+    details: TestDetails[]
 
     @OneToMany(() => Attempt, (attempt) => attempt.test)
     attempts: Attempt[]

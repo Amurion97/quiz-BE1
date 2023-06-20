@@ -38,10 +38,10 @@ class AttemptController {
     save = async (req: Request, res: Response) => {
         try {
             req.body.user = req['decode'].id;
-            await attemptService.save(req.body);
+            const attempt = await attemptService.save(req.body);
             res.status(201).json({
                 success: true,
-                data: 'Add attempt success!'
+                data: attempt
             });
         } catch (e) {
             console.log("error in add attempt:", e)
