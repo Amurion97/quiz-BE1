@@ -34,6 +34,9 @@ class AttemptService {
                 user: {
                     email: true
                 }
+            },
+            order: {
+                score: "DESC"
             }
         })
     }
