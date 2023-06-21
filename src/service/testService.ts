@@ -47,7 +47,7 @@ class TestService {
         query.page = query.page ? parseInt(query.page) : undefined;
         query.rows = query.rows ? parseInt(query.rows) : undefined;
     }
-    all = async (query) => {
+    findAll = async (query) => {
         console.log("queries:", query);
         this.queryProcess(query)
         const [tests, testCount] = await this.testRepository.findAndCount({
@@ -65,7 +65,7 @@ class TestService {
         return {tests: tests, testCount: testCount}
     }
 
-    one = async (id) => {
+    findOne = async (id) => {
         return await this.testRepository.findOne({
             where: {
                 id: id
@@ -84,6 +84,26 @@ class TestService {
                 details: {
                     no: "ASC",
                 }
+            },
+        },)
+    }
+
+   findOneBrief = async (id) => {
+        return await this.testRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: {
+                tags: true,
+                difficulty: true,
+                details: {
+                    question: true
+                }
+            },
+            order: {
+                details: {
+                    no: "ASC",
+                },
             },
         },)
     }

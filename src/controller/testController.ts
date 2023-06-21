@@ -3,9 +3,9 @@ import testService from "../service/testService";
 
 
 class TestController {
-    all = async (req: Request, res: Response) => {
+    findAll = async (req: Request, res: Response) => {
         try {
-            let tests = await testService.all(req.query)
+            let tests = await testService.findAll(req.query)
             res.status(201).json({
                 data: tests,
                 success: true
@@ -19,9 +19,9 @@ class TestController {
         }
     }
 
-    one = async (req: Request, res: Response) => {
+    findOne = async (req: Request, res: Response) => {
         try {
-            let test = await testService.one(req.params.id);
+            let test = await testService.findOne(req.params.id);
             res.status(200).json({
                 success: true,
                 data: test
@@ -30,6 +30,22 @@ class TestController {
             console.log("error in get one test:", e)
             res.status(500).json({
                 message: 'error in get one test',
+                success: false
+            })
+        }
+    }
+
+    findOneBrief = async (req: Request, res: Response) => {
+        try {
+            let test = await testService.findOneBrief(req.params.id);
+            res.status(200).json({
+                success: true,
+                data: test
+            });
+        } catch (e) {
+            console.log("error in get one test brief:", e)
+            res.status(500).json({
+                message: 'error in get one test brief',
                 success: false
             })
         }

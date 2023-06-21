@@ -44,7 +44,7 @@ class AttemptService {
     save = async (attempt) => {
         console.log("attempt to save:", attempt);
         const answers = attempt.answers;
-        const test = await testService.one(attempt.test);
+        const test = await testService.findOne(attempt.test);
         let corrects = 0;
         test.details.forEach((item, index) => {
             if (item.question.type.id <= 2) {
