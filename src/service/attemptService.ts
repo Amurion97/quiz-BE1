@@ -55,16 +55,18 @@ class AttemptService {
             } else if (item.question.type.id == 3) {
                 const trueAnswers = item.question.answers.filter(item => item.isTrue);
                 const trueAnswerIDs = trueAnswers.map(item => item.id).sort((a, b) => a - b);
-                answers[index] = answers[index].sort((a, b) => a - b);
-                let correct = true;
-                for (let i = 0; i < trueAnswerIDs.length; i++) {
-                    if (trueAnswerIDs[i] != answers[index][i]) {
-                        correct = false;
-                        break;
+                if (trueAnswerIDs.length == answers[index].length) {
+                    answers[index] = answers[index].sort((a, b) => a - b);
+                    let correct = true;
+                    for (let i = 0; i < trueAnswerIDs.length; i++) {
+                        if (trueAnswerIDs[i] != answers[index][i]) {
+                            correct = false;
+                            break;
+                        }
                     }
-                }
-                if (correct) {
-                    corrects++
+                    if (correct) {
+                        corrects++
+                    }
                 }
             }
         });
