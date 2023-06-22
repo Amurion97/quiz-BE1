@@ -16,7 +16,8 @@ const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
     cors: {
-        origin: `http://${hostname}:${FE_SERVER_PORT}`
+        // origin: `http://${hostname}:${FE_SERVER_PORT}`,
+        origin: `http://localhost:${FE_SERVER_PORT}`,
     }
 });
 

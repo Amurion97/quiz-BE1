@@ -3,6 +3,7 @@ import testService from "./testService";
 import {Room} from "../entity/Room";
 import {OTP6Gen} from "./misc/OTP";
 import userService from "./userService";
+import {emitKeypressEvents} from "readline";
 
 class RoomService {
     private roomRepository = AppDataSource.getRepository(Room);
@@ -25,9 +26,20 @@ class RoomService {
     }
 
     findActiveByCode = async (code) => {
-        return await this.roomRepository.findOneBy({
-            code: code,
-            isActive: true
+        return await this.roomRepository.findOne({
+            where: {
+                code: code,
+                isActive: true
+            },
+            relations: {
+                user: true
+            },
+            select: {
+                user: {
+                    email: true
+                }
+            }
+
         })
     }
 

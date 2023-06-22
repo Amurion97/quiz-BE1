@@ -20,7 +20,7 @@ class roomController {
         try {
             req.body.user = req['decode'].id;
             let newRoom = await roomService.createNewRoom(req.body);
-            res.status(201).json(newRoom);
+            res.status(201).json(newRoom.code);
         } catch (e) {
             console.log("error in add room:", e)
             res.status(500).json({
