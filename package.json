@@ -25,6 +25,7 @@
       "otp-generator": "^4.0.1",
       "qs": "^6.11.2",
       "reflect-metadata": "^0.1.13",
+      "socket.io": "^4.6.2",
       "typeorm": "^0.3.15",
       "typeorm-naming-strategies": "^4.1.0"
    },

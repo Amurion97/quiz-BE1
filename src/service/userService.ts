@@ -3,11 +3,12 @@ import {User} from "../entity/User";
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken";
 import {SECRET} from "../middleware/auth";
-// import * as otpGenerator from "otp-generator";
+
 import otpGenerator = require('otp-generator')
 import nodemailer = require("nodemailer");
 import roleService from "./roleService";
 import qs = require("qs");
+import {OTP6Gen} from "./misc/OTP";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -140,11 +141,7 @@ class UserService {
         if (!user) {
             return false;
         } else {
-            let otp = otpGenerator.generate(6, {
-                lowerCaseAlphabets: false,
-                upperCaseAlphabets: false,
-                specialChars: false
-            });
+            let otp = OTP6Gen();
             await this.userRepository.update({id: user.id}, {OTP: otp, OTPGenTime: new Date()})
             await this.OTPSend(email, otp)
             return true

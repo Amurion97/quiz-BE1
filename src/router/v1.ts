@@ -8,6 +8,7 @@ import typeRouter from "./v1/typeRouter";
 import difficultyRouter from "./v1/difficultyRouter";
 import testRouter from "./v1/testRouter";
 import attemptRouter from "./v1/attemptRouter";
+import roomRouter from "./v1/roomRouter";
 
 const routerV1 = Router();
 routerV1.use('/users', userRouter);
@@ -19,5 +20,6 @@ routerV1.use('/types', typeRouter)
 routerV1.use('/difficulties', difficultyRouter)
 routerV1.use('/tests', testRouter)
 routerV1.use('/attempts', attemptRouter)
+routerV1.use('/rooms', roomRouter)
 
 export default routerV1;
