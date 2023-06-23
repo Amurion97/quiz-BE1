@@ -47,6 +47,7 @@ class RoomDetailService {
         })
         if (currentDetail) {
             currentDetail.isOnline = true;
+            currentDetail.socketId = socketId;
             await this.roomDetailRepository.save(currentDetail)
         } else {
             let room = await roomService.findActiveByCode(roomCode)
@@ -62,12 +63,19 @@ class RoomDetailService {
         let currentDetail = await this.roomDetailRepository.findOne({
             where: {
                 socketId: socketId
+            },
+            relations: {
+                room: true
             }
         })
         if (currentDetail) {
             currentDetail.isOnline = false;
-            await this.roomDetailRepository.save(currentDetail)
+            await this.roomDetailRepository.save(currentDetail);
+            return currentDetail
+        } else {
+            return null
         }
+
     }
 
 }

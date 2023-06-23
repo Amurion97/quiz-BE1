@@ -7,11 +7,16 @@ export function socketController(socket: Socket) {
     console.log('a user connected:', socket.id);
     socket.on('disconnect', async () => {
         console.log('user disconnected:', socket.id);
-        await roomDetailService.leaveRoom(socket.id)
+        const roomDetail = await roomDetailService.leaveRoom(socket.id);
+        if (roomDetail) {
+            let lobby = `lobby-${roomDetail.room.code}`;
+            io.to(lobby).emit('lobby-update', `${roomDetail.email} leave room`);
+        }
+
     });
 
-    socket.on('join-room', async (arg, callback) => {
-        console.log('user join room:', arg);
+    socket.on('join-lobby', async (arg, callback) => {
+        console.log('user join lobby:', arg);
         let room = await roomService.findActiveByCode(arg.roomCode)
         if (room) {
             const email = arg.email
@@ -19,21 +24,19 @@ export function socketController(socket: Socket) {
                 socket.emit('already-in-room', 'You have already joined this room, ' +
                     'please log out on other devices and try again')
             } else {
-                socket.join(room.code);
+                let lobby = `lobby-${room.code}`;
+                socket.join(lobby);
                 await roomDetailService.save(socket.id, room.code, email)
-                let roomCurrentSize = io.sockets.adapter.rooms.get(room.code).size;
-                let msg = `${arg.email} join room, total: ${roomCurrentSize} people in this room`
-                io.to(room.code).emit('room-update', msg);
+                let lobbyCurrentSize = io.sockets.adapter.rooms.get(lobby).size;
+                let msg = `${arg.email} join lobby, total: ${lobbyCurrentSize} people in this lobby`
+                io.to(lobby).emit('lobby-update', msg);
             }
         }
-
-
-        // io.emit('foo', value);
     });
 
-    socket.on('send-to-room', (roomID, msg) => {
-        console.log("someone send to room", roomID, msg)
-        io.to(String(roomID)).emit('foo', msg)
-        // io.emit('foo', value);
+    socket.on('send-to-room', (arg) => {
+        console.log("someone send to lobby", arg.roomCode, arg.msg);
+        let lobby = `lobby-${arg.roomCode}`;
+        io.to(lobby).emit('foo', arg.msg)
     });
 }
