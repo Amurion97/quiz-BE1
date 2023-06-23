@@ -34,9 +34,15 @@ export function socketController(socket: Socket) {
         }
     });
 
-    socket.on('send-to-room', (arg) => {
+    socket.on('send-to-lobby', (arg) => {
         console.log("someone send to lobby", arg.roomCode, arg.msg);
         let lobby = `lobby-${arg.roomCode}`;
-        io.to(lobby).emit('foo', arg.msg)
+        io.to(lobby).emit('lobby-update', arg.msg)
+    });
+
+    socket.on('send-all', (arg, callback) => {
+        console.log("someone send to everyone");
+        io.emit('send-all', arg);
+        callback("ok")
     });
 }
