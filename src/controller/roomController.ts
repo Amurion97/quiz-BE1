@@ -15,6 +15,20 @@ class roomController {
             })
         }
     }
+    findOne=async (req:Request,res:Response)=>{
+        try {
+            let roomId = await roomService.findOne(req.params.code);
+            console.log(roomId)
+            res.status(201).json(roomId)
+
+        }catch (e){
+            console.log("error in get room: ",e)
+            res.status(500).json({
+                message: 'error in get room',
+                success: false
+            })
+        }
+    }
 
     save = async (req: Request, res: Response) => {
         try {

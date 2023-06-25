@@ -42,6 +42,16 @@ class RoomService {
 
         })
     }
+    findOne = async (code)=>{
+        return await this.roomRepository.findOne({
+            where: {
+                code: code
+            },
+            relations: {
+                test:true
+            }
+        })
+    }
 
     createNewRoom = async (room) => {
         let code = OTP6Gen();
