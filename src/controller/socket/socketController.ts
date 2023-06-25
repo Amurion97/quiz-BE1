@@ -21,7 +21,6 @@ export function socketController(socket: Socket) {
                 leave: true
             });
         }
-
     });
 
     socket.on('join-lobby', async (arg, callback) => {
@@ -29,17 +28,32 @@ export function socketController(socket: Socket) {
         let room = await roomService.findActiveByCode(arg.roomCode)
         if (room) {
             const email = arg.email
-            if (await roomDetailService.checkIsInRoom(room.code, email)) {
-                socket.emit('already-in-lobby', 'You have already joined this lobby, ' +
-                    'please log out on other tabs and/or devices and try again')
+            if (email == room.user.email) {
+                callback(await roomDetailService.findAllActiveByRoom(room.id))
             } else {
-                let lobby = `lobby-${room.code}`;
-                socket.join(lobby);
-                await roomDetailService.save(socket.id, room.code, email)
-                let lobbyCurrentSize = io.sockets.adapter.rooms.get(lobby).size;
-                let msg = `${arg.email} join lobby, total: ${lobbyCurrentSize} people in this lobby`
-                io.to(lobby).emit('lobby-update', msg);
+                if (await roomDetailService.checkIsInRoom(room.code, email)) {
+                    callback({
+                        success: false,
+                        message: 'You have already joined this lobby, ' +
+                            'please log out on other tabs and/or devices and try again'
+                    });
+                } else {
+                    let lobby = `lobby-${room.code}`;
+                    socket.join(lobby);
+                    await roomDetailService.save(socket.id, room.code, email)
+                    let lobbyCurrentSize = io.sockets.adapter.rooms.get(lobby).size;
+                    let msg = `${arg.email} joined the lobby, total: ${lobbyCurrentSize} people in this lobby`
+                    io.to(lobby).emit('lobby-update', msg);
+
+                    // callback(msg)
+                    callback(await roomDetailService.findAllActiveByRoom(room.id))
+                }
             }
+        } else {
+            callback({
+                success: false,
+                message: "Room does not exist!"
+            })
         }
     });
 
@@ -77,8 +91,16 @@ export function socketController(socket: Socket) {
                     incorrects: roomDetail.incorrects
                 })
             } else {
-                callback(false)
+                callback({
+                    success: false,
+                    message: "You're not in this room!"
+                })
             }
+        } else {
+            callback({
+                success: false,
+                message: "Room does not exist!"
+            })
         }
     });
 

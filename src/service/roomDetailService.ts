@@ -8,7 +8,36 @@ class RoomDetailService {
     findAllByRoom = async (roomId) => {
         return await this.roomDetailRepository.find({
             where: {
-                room: roomId
+                room: {
+                    id: roomId
+                },
+            },
+            relations: {
+                room: true
+            },
+            select: {
+                room: {
+                    code: true
+                }
+            }
+        })
+    }
+
+    findAllActiveByRoom = async (roomId) => {
+        return await this.roomDetailRepository.find({
+            where: {
+                room: {
+                    id: roomId
+                },
+                isOnline: true,
+            },
+            relations: {
+                room: true
+            },
+            select: {
+                room: {
+                    code: true
+                }
             }
         })
     }
