@@ -75,8 +75,12 @@ class RoomDetailService {
         } else {
             return null
         }
-
     }
+
+    update = async (id: number, roomDetail: RoomDetail) => {
+        await this.roomDetailRepository.update({id: id}, roomDetail)
+    }
+
 
 }
 

@@ -10,6 +10,10 @@ export class RoomDetail {
 
     @Column({default: "[]"})
     choices: string;
+    @Column({default: 0})
+    corrects: number;
+    @Column({default: 0})
+    incorrects: number;
     @Column()
     email: string;
 

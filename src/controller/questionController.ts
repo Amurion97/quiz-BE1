@@ -21,7 +21,7 @@ class QuestionController {
 
     one = async (req: Request, res: Response) => {
         try {
-            let question = await questionService.one(req.params.id);
+            let question = await questionService.findOne(req.params.id);
             res.status(200).json({
                 success: true,
                 data: question

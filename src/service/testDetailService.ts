@@ -10,7 +10,7 @@ class TestDetailService {
             let newTestDetail = new TestDetails()
             newTestDetail.test = test;
             newTestDetail.no = i + 1;
-            newTestDetail.question = await questionService.one(questionIDList[i])
+            newTestDetail.question = await questionService.findOne(questionIDList[i])
             await this.testDetailsRepository.save(newTestDetail)
         }
     }
@@ -18,6 +18,8 @@ class TestDetailService {
     deleteByTest = async (id) => {
         await this.testDetailsRepository.delete({test: id})
     }
+
+
 
 }
 

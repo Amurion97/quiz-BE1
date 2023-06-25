@@ -71,7 +71,7 @@ class QuestionService {
         return {questions: questions, questionCount: questionCount}
     }
 
-    one = async (id) => {
+    findOne = async (id) => {
         return await this.questionRepository.findOne({
             where: {
                 id: id

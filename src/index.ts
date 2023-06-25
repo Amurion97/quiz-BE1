@@ -6,6 +6,7 @@ import * as cors from 'cors';
 import * as http from "http";
 import {Server} from "socket.io";
 import {socketController} from "./controller/socket/socketController";
+import {RoomDetail} from "./entity/RoomDetail";
 
 const hostname = '127.0.0.1';
 const port = 5000;
@@ -35,6 +36,8 @@ AppDataSource.initialize().then(async () => {
     server.listen(port);
 
     io.on('connection', socketController);
+
+    await AppDataSource.getRepository(RoomDetail).delete({})
 
     let current = new Date(Date.now())
     console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
