@@ -5,15 +5,10 @@ import roomService from "./roomService";
 class RoomDetailService {
     private roomDetailRepository = AppDataSource.getRepository(RoomDetail);
 
-    findAllByRoom = async (roomCode) => {
+    findAllByRoom = async (roomId) => {
         return await this.roomDetailRepository.find({
-            relations: {
-                room: true,
-            },
             where: {
-                room: {
-                    code: roomCode
-                }
+                room: roomId
             }
         })
     }

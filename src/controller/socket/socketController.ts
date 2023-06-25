@@ -9,12 +9,17 @@ import {RoomDetail} from "../../entity/RoomDetail";
 
 export function socketController(socket: Socket) {
     console.log('a user connected:', socket.id);
+
     socket.on('disconnect', async () => {
         console.log('user disconnected:', socket.id);
         const roomDetail = await roomDetailService.leaveRoom(socket.id);
         if (roomDetail) {
             let lobby = `lobby-${roomDetail.room.code}`;
-            io.to(lobby).emit('lobby-update', `${roomDetail.email} leave room`);
+            // io.to(lobby).emit('lobby-update', `${roomDetail.email} leave lobby`);
+            io.to(lobby).emit('lobby-update', {
+                email: roomDetail.email,
+                leave: true
+            });
         }
 
     });
@@ -42,18 +47,8 @@ export function socketController(socket: Socket) {
         console.log('user join room:', arg);
         let room = await roomService.findActiveByCode(arg.roomCode)
         if (room) {
-            const email = arg.email
-            if (await roomDetailService.checkIsInRoom(room.code, email)) {
-                socket.emit('already-in-room', 'You have already joined this room, ' +
-                    'please log out on other devices and try again')
-            } else {
-                let lobby = `lobby-${room.code}`;
-                socket.join(lobby);
-                await roomDetailService.save(socket.id, room.code, email)
-                let lobbyCurrentSize = io.sockets.adapter.rooms.get(lobby).size;
-                let msg = `${arg.email} join lobby, total: ${lobbyCurrentSize} people in this lobby`
-                io.to(lobby).emit('lobby-update', msg);
-            }
+            socket.join(`room-${arg.roomCode}`);
+            callback(await roomDetailService.findAllByRoom(room.id))
         }
     });
 
