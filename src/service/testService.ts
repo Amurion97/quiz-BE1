@@ -55,7 +55,8 @@ class TestService {
             relations: {
                 tags: true,
                 difficulty: true,
-                details: true
+                details: true,
+                attempts: true,
             },
             order: {
                 id: "ASC",
@@ -79,7 +80,8 @@ class TestService {
                         answers: true,
                         type: true
                     }
-                }
+                },
+                attempts: true,
             },
             order: {
                 details: {

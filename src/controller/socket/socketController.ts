@@ -65,6 +65,7 @@ export function socketController(socket: Socket) {
             callback(await roomDetailService.findAllByRoom(room.id))
         }
     });
+    
 
     socket.on('question-submit', async (arg, callback) => {
         console.log('user submit answer for a question:', arg);
