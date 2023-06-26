@@ -32,7 +32,8 @@ class RoomService {
                 isActive: true
             },
             relations: {
-                user: true
+                user: true,
+                test: true
             },
             select: {
                 user: {

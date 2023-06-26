@@ -72,10 +72,10 @@ class RoomDetailService {
         if (currentDetail) {
             currentDetail.isOnline = true;
             currentDetail.socketId = socketId;
-            await this.roomDetailRepository.save(currentDetail)
+            return await this.roomDetailRepository.save(currentDetail)
         } else {
             let room = await roomService.findActiveByCode(roomCode)
-            await this.roomDetailRepository.save({
+            return await this.roomDetailRepository.save({
                 email: email,
                 room: room,
                 socketId: socketId,
