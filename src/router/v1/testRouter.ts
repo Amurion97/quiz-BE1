@@ -3,7 +3,7 @@ import testController from "../../controller/testController";
 
 
 const testRouter = Router()
-testRouter.get('', testController.findAll);
+testRouter.get('/', testController.findAll);
 testRouter.get('/brief/:id', testController.findOneBrief);
 testRouter.get('/:id', testController.findOne);
 testRouter.post('', testController.save);

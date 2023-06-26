@@ -55,6 +55,7 @@ class TestService {
             relations: {
                 tags: true,
                 difficulty: true,
+                details: true
             },
             order: {
                 id: "ASC",
