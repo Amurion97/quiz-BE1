@@ -29,7 +29,8 @@ class AttemptService {
                 }
             },
             relations: {
-                user: true
+                user: true,
+                test: true,
             },
             select: {
                 user: {
