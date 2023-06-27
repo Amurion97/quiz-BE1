@@ -2,12 +2,10 @@ import {Socket} from "socket.io";
 import {io} from "../../index";
 import roomService from "../../service/roomService";
 import roomDetailService from "../../service/roomDetailService";
-import testDetailService from "../../service/testDetailService";
 import attemptService from "../../service/attemptService";
 import questionService from "../../service/questionService";
 import {RoomDetail} from "../../entity/RoomDetail";
 import testService from "../../service/testService";
-
 export function socketController(socket: Socket) {
     console.log('a user connected:', socket.id);
 
@@ -33,33 +31,47 @@ export function socketController(socket: Socket) {
             if (email == room.user.email) {
                 socket.join(lobby);
                 callback(await roomDetailService.findAllActiveByRoom(room.id))
+                console.log(io.sockets.adapter.rooms.get(lobby))
             } else {
                 if (await roomDetailService.checkIsInRoom(room.code, email)) {
                     callback({
                         success: false,
-                        message: 'You have already joined this lobby, ' +
-                            'please log out on other tabs and/or devices and try again'
+                        message: 'Bạn đã tham gia phòng thi này, ' +
+                            'vui lòng kiểm tra lại các tab hoặc thiết bị khác của bạn'
                     });
                 } else {
                     socket.join(lobby);
-                    let newDetail = await roomDetailService.save(socket.id, room.code, email)
                     let lobbyCurrentSize = io.sockets.adapter.rooms.get(lobby).size;
-                    // let msg = `${arg.email} joined the lobby, total: ${lobbyCurrentSize} people in this lobby`
-                    let msg = {
-                        person: newDetail,
-                        total: lobbyCurrentSize - 1,
-                        join: true
-                    }
-                    io.to(lobby).emit('lobby-update', msg);
+                    // console.log(await io.in(lobby).fetchSockets())
+                    // console.log(io.sockets.adapter.rooms.get(lobby))
+                    if (lobbyCurrentSize - 1 > room.size) {
+                        callback({
+                            success: false,
+                            message: 'Số lượng thí sinh đã đạt tối đa, vui lòng liên hệ với giáo viên'
+                        });
+                        socket.disconnect();
+                    } else {
+                        socket.join(lobby);
+                        let newDetail = await roomDetailService.save(socket.id, room.code, email);
+                        let msg = {
+                            person: newDetail,
+                            total: lobbyCurrentSize - 1,
+                            join: true
+                        }
+                        io.to(lobby).emit('lobby-update', msg);
 
-                    // callback(msg)
-                    callback(await roomDetailService.findAllActiveByRoom(room.id))
+                        callback(await roomDetailService.findAllActiveByRoom(room.id));
+                    }
+                    console.log(io.sockets.adapter.rooms.get(lobby))
+                    // let msg = `${arg.email} joined the lobby, total: ${lobbyCurrentSize} people in this lobby`
+
                 }
             }
         } else {
             callback({
                 success: false,
-                message: "Room does not exist!"
+                // message: "Room does not exist!",
+                message: "Phòng thi không tồn tại!",
             })
         }
     });
