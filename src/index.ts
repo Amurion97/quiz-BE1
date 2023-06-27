@@ -7,10 +7,13 @@ import * as http from "http";
 import {Server} from "socket.io";
 import {socketController} from "./controller/socket/socketController";
 import {RoomDetail} from "./entity/RoomDetail";
+import {User} from "./entity/User";
+import userService from "./service/userService";
 
 const hostname = '127.0.0.1';
 const port = 5000;
 const FE_SERVER_PORT = 3000;
+const FE_origin = 'https://amurion97.github.io';
 
 // create express app
 const app = express();
@@ -25,6 +28,7 @@ export const io = new Server(server, {
 //app options
 app.use(cors({
     // origin: `http://${hostname}:${FE_SERVER_PORT}`,
+    origin: FE_origin,
     // credentials: true
 }))
 app.use(bodyParser.json());
@@ -37,7 +41,8 @@ AppDataSource.initialize().then(async () => {
 
     io.on('connection', socketController);
 
-    await AppDataSource.getRepository(RoomDetail).delete({})
+    await userService.resetAdmin();
+    await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
 
     let current = new Date(Date.now())
     console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
