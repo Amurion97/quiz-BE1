@@ -34,6 +34,22 @@ class TestService {
         }
     }
 
+    private orderOptions(query) {
+        const order = (query.order == "ASC") ? "ASC" : "DESC";
+        const key = query.key.toUpperCase() == 'TIME' ? 'time' : 'difficulty'
+        return {
+            order:
+                query.key.toUpperCase() == 'TIME' ?
+                    {
+                        time: order
+                    } : {
+                        difficulty: order
+
+                    }
+            ,
+        }
+    }
+
     private queryProcess = (query) => {
         if (!query.difficultiesIDs) {
             query.difficultiesIDs = [];
@@ -46,7 +62,12 @@ class TestService {
         }
         query.page = query.page ? parseInt(query.page) : undefined;
         query.rows = query.rows ? parseInt(query.rows) : undefined;
+        query.sortKey = query.sortKey ? query.sortKey.toString() : ""
+        query.order = query.order ?
+            ((query.order.toUpperCase() == "DESC") ? "DESC" : "ASC")
+            : "ASC"
     }
+
     findAll = async (query) => {
         console.log("queries:", query);
         this.queryProcess(query)
@@ -57,8 +78,17 @@ class TestService {
                 difficulty: true,
                 details: true
             },
+            // ...this.orderOptions(query),
             order: {
-                id: "ASC",
+                ...(query.sortKey.toUpperCase() == 'TIME' ?
+                    {
+                        time: query.order
+                    } : (query.sortKey.toUpperCase() == 'DIFFICULTY' ? {
+                        difficulty: {
+                            id: query.order
+                        }
+                    } : {id: "ASC"}))
+                ,
             },
             skip: query.page && query.rows ? (query.page - 1) * query.rows : 0,
             take: query.rows ? query.rows : 10,
@@ -89,7 +119,7 @@ class TestService {
         },)
     }
 
-   findOneBrief = async (id) => {
+    findOneBrief = async (id) => {
         return await this.testRepository.findOne({
             where: {
                 id: id
