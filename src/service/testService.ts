@@ -91,6 +91,11 @@ class TestService {
                     } : {id: "ASC"}))
                 ,
             },
+            select: {
+                attempts: {
+                    id: true
+                }
+            },
             skip: query.page && query.rows ? (query.page - 1) * query.rows : 0,
             take: query.rows ? query.rows : 10,
         })
