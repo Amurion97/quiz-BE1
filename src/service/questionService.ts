@@ -50,7 +50,7 @@ class QuestionService {
         query.page = query.page ? parseInt(query.page) : undefined;
         query.rows = query.rows ? parseInt(query.rows) : undefined;
     }
-    all = async (query) => {
+    findAll = async (query) => {
         console.log("queries:", query);
         this.queryProcess(query)
         const [questions, questionCount] = await this.questionRepository.findAndCount({
@@ -116,8 +116,8 @@ class QuestionService {
         // targetQuestion.tags = question.tags;
         targetQuestion.tags = targetQuestion.tags.filter(item => false);
         targetQuestion.content = question.content;
-        targetQuestion.difficulty = await difficultyService.one(question.difficulty)
-        targetQuestion.type = await typeService.one(question.type)
+        targetQuestion.difficulty = await difficultyService.findOne(question.difficulty)
+        targetQuestion.type = await typeService.findOne(question.type)
 
         await AppDataSource.manager.save(targetQuestion);
 

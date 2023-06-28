@@ -3,14 +3,14 @@ import {Difficulty} from "../entity/Difficulty";
 
 class DifficultyService {
     private difficultyRepository = AppDataSource.getRepository(Difficulty)
-    all = async () => {
+    findAll = async () => {
         return await this.difficultyRepository.find({
             order: {
                 id: "ASC",
             }
         })
     }
-    one = async (id) => {
+    findOne = async (id) => {
         return await this.difficultyRepository.findOneBy({id: id})
     }
 

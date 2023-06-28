@@ -7,7 +7,6 @@ import * as http from "http";
 import {Server} from "socket.io";
 import {socketController} from "./controller/socket/socketController";
 import {RoomDetail} from "./entity/RoomDetail";
-import {User} from "./entity/User";
 import userService from "./service/userService";
 
 const hostname = '127.0.0.1';
@@ -32,16 +31,13 @@ const corsFunction = (origin, callback) => {
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
-    cors:
-        {
-            origin: corsFunction
-        }
+    cors: {
+        origin: corsFunction
+    }
 });
 
 //app options
 app.use(cors({
-    // origin: `http://${hostname}:${FE_SERVER_PORT}`,
-    // origin: FE_origin,
     origin: corsFunction
     // credentials: true
 }))

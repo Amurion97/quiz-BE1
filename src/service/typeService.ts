@@ -3,14 +3,14 @@ import {Type} from "../entity/Type";
 
 class TypeService {
     private typeRepository = AppDataSource.getRepository(Type)
-    all = async () => {
+    findAll = async () => {
         return await this.typeRepository.find({
             order: {
                 id: "ASC",
             }
         })
     }
-    one = async (id) => {
+    findOne = async (id) => {
         return await this.typeRepository.findOneBy({id: id})
     }
     save = async (type) => {

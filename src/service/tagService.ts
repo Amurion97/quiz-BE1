@@ -3,7 +3,7 @@ import {Tag} from "../entity/Tag";
 
 class TagService {
     private tagRepository = AppDataSource.getRepository(Tag)
-    all = async () => {
+    findAll = async () => {
         return await this.tagRepository.find({
            order:{
                id:"ASC"
@@ -11,7 +11,7 @@ class TagService {
         })
     }
 
-    allWithQuestions = async () => {
+    findAllWithQuestions = async () => {
         return await this.tagRepository.find({
             relations: {
                 questions:true

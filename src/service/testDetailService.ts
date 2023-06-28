@@ -19,8 +19,6 @@ class TestDetailService {
         await this.testDetailsRepository.delete({test: id})
     }
 
-
-
 }
 
 export default new TestDetailService();

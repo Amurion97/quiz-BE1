@@ -4,7 +4,7 @@ import DifficultyService from "../service/difficultyService";
 class DifficultyController {
     all = async (req: Request, res: Response) => {
         try {
-            let difficulties = await DifficultyService.all();
+            let difficulties = await DifficultyService.findAll();
             console.log(difficulties)
             res.status(201).json({
                 success: true,

@@ -4,11 +4,11 @@ import {Role} from "../entity/Role";
 class RoleService {
     private roleRepository = AppDataSource.getRepository(Role);
 
-    all = async () => {
+    findAll = async () => {
         return await this.roleRepository.find()
     }
 
-    one = async (id) => {
+    findOne = async (id) => {
         return await this.roleRepository.findOneBy({id: id})
     }
 

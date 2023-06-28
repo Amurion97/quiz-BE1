@@ -2,23 +2,6 @@ import {Request, Response} from "express";
 import AnswerService from "../service/answerService";
 
 class AnswerController {
-    all = async (req: Request, res: Response) => {
-        try {
-            let answers = await AnswerService.all();
-            console.log(answers)
-            res.status(201).json({
-                success: true,
-                data: answers
-            });
-        } catch (e) {
-            console.log("error in get all answer:", e)
-            res.status(500).json({
-                message: 'error in get all answer',
-                success: false
-            })
-        }
-    }
-
     save = async (req: Request, res: Response) => {
         try {
             await AnswerService.save(req.body);

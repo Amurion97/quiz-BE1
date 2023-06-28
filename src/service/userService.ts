@@ -40,7 +40,7 @@ class UserService {
         }
 
         admin.password = hashedPassword;
-        admin.role = await roleService.one(1);
+        admin.role = await roleService.findOne(1);
         admin.email = 'admin@gmail.com'
         await this.userRepository.save(admin);
     }
@@ -116,7 +116,7 @@ class UserService {
     }
 
     updateRoleOfUser = async (id) => {
-        let teacherRole = await roleService.one(2)
+        let teacherRole = await roleService.findOne(2)
         await this.userRepository.update({id: id}, {role: teacherRole});
     }
 
@@ -129,7 +129,7 @@ class UserService {
         });
         return !!(user);
     }
-    all = async () => {
+    findAll = async () => {
         return this.userRepository.find({
             relations: {
                 role: true
@@ -138,11 +138,6 @@ class UserService {
                 isDeleted: false
             }
         })
-        return await AppDataSource.createQueryBuilder()
-            .select('user')
-            .from(User, 'user')
-            .innerJoinAndSelect('user.role', 'role')
-            .getMany();
     }
     delete = async (id) => {
         await this.userRepository.update({id: id}, {isDeleted: true});
@@ -197,8 +192,11 @@ class UserService {
             console.log(elapsedTime);
             if (elapsedTime < 60 * 60 * 1000) {
                 let newPassword = await bcrypt.hash(reqBody.newPassword, 10)
-                await this.userRepository.update({id: user.id}, {password: newPassword});
-                await this.userRepository.update({id: user.id}, {OTP: null, OTPGenTime: null})
+                await this.userRepository.update({id: user.id}, {
+                    password: newPassword,
+                    OTP: null,
+                    OTPGenTime: null
+                });
                 return true
             } else {
                 return false;

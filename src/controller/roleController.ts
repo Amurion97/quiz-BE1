@@ -4,7 +4,7 @@ import roleService from "../service/roleService";
 class RoleController {
     all = async (req: Request, res: Response) => {
         try {
-            let roles = await roleService.all();
+            let roles = await roleService.findAll();
             res.status(201).json({
                 success: true,
                 data: roles

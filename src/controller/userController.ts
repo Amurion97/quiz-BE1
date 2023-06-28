@@ -63,7 +63,7 @@ class UserController {
     all = async (req: Request, res: Response) => {
         console.log("check ", req["decode"])
         try {
-            let users = await userService.all();
+            let users = await userService.findAll();
             res.status(201).json({
                 success: true,
                 data: users

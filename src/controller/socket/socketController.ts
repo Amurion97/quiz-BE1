@@ -14,7 +14,6 @@ export function socketController(socket: Socket) {
         const roomDetail = await roomDetailService.leaveRoom(socket.id);
         if (roomDetail) {
             let lobby = `lobby-${roomDetail.room.code}`;
-            // io.to(lobby).emit('lobby-update', `${roomDetail.email} leave lobby`);
             io.to(lobby).emit('lobby-update', {
                 email: roomDetail.email,
                 leave: true
@@ -63,7 +62,6 @@ export function socketController(socket: Socket) {
                         callback(await roomDetailService.findAllActiveByRoom(room.id));
                     }
                     console.log(io.sockets.adapter.rooms.get(lobby))
-                    // let msg = `${arg.email} joined the lobby, total: ${lobbyCurrentSize} people in this lobby`
 
                 }
             }
