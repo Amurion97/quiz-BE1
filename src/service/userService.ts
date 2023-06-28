@@ -29,6 +29,21 @@ class UserService {
         user.role = 3;
         await this.userRepository.save(user);
     }
+
+    resetAdmin = async () => {
+        let admin = await this.userRepository.findOneBy({
+            email: 'admin@gmail.com'
+        })
+        let hashedPassword = bcrypt.hashSync('123123', 10);
+        if (!admin) {
+            admin = new User()
+        }
+
+        admin.password = hashedPassword;
+        admin.role = await roleService.one(1);
+        admin.email = 'admin@gmail.com'
+        await this.userRepository.save(admin);
+    }
     loginCheck = async (user) => {
         let foundUser = await this.userRepository.findOne({
             relations: {
