@@ -54,7 +54,7 @@ AppDataSource.initialize().then(async () => {
     await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
 
     let current = new Date(Date.now())
-    server.listen(Number(port), "0.0.0.0", () => {
+    server.listen(Number(port), () => {
         console.log(`${current.getHours()}:${current.getMinutes()} 
         UTC: ${current.toUTCString()} 
         Express server has started on port ${port}. 
