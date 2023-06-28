@@ -50,17 +50,16 @@ app.use('', router);
 AppDataSource.initialize().then(async () => {
     //start listening after DB connect success
 
-
-    io.on('connection', socketController);
-
     await userService.resetAdmin();
     await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
 
     let current = new Date(Date.now())
-    server.listen(port, () => {
+    server.listen(`0.0.0.0:${port}`, () => {
         console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
     Open http://${hostname}:${port}/v1/questions to see results`)
     });
+
+    io.on('connection', socketController);
 
 
 }).catch(error => console.log(error))
