@@ -10,7 +10,7 @@ import {RoomDetail} from "./entity/RoomDetail";
 import userService from "./service/userService";
 
 const hostname = '127.0.0.1';
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 5000;
 const FE_LOCAL_PORT = 3000;
 const FE_local = `http://localhost:${FE_LOCAL_PORT}`
 const FE_github = 'https://amurion97.github.io';
