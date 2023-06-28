@@ -20,7 +20,7 @@
       "cors": "^2.8.5",
       "express": "^4.17.2",
       "jsonwebtoken": "^9.0.0",
-      "mysql": "^2.14.1",
+      "mysql2": "^3.4.2",
       "nodemailer": "^6.9.3",
       "otp-generator": "^4.0.1",
       "qs": "^6.11.2",

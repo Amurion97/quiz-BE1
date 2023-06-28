@@ -4,11 +4,11 @@ import {SnakeNamingStrategy} from "typeorm-naming-strategies";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    host: "localhost",
-    port: 3306,
+    host: "containers-us-west-38.railway.app",
+    port: 6144,
     username: "root",
-    password: "123456",
-    database: "quiz5",
+    password: "mBRWqNVCfnDJVgRf8Vze",
+    database: "railway",
     synchronize: true,
     logging: false,
     // entities: ["entity/*.ts"],

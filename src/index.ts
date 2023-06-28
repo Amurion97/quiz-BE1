@@ -11,10 +11,11 @@ import userService from "./service/userService";
 
 const hostname = '127.0.0.1';
 const port = 5000;
-const FE_SERVER_PORT = 3000;
-const FE_origin = 'https://amurion97.github.io';
+const FE_LOCAL_PORT = 3000;
+const FE_local = `http://localhost:${FE_LOCAL_PORT}`
+const FE_github = 'https://amurion97.github.io';
 const FE_netlify = 'https://giang-inc.netlify.app';
-const allowedDomains = [FE_origin, `http://localhost:${FE_SERVER_PORT}`, FE_netlify];
+const allowedDomains = [FE_local, FE_github, FE_netlify];
 
 
 const corsFunction = (origin, callback) => {
