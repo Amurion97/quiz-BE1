@@ -32,7 +32,7 @@
       "typeorm-naming-strategies": "^4.1.0"
    },
    "scripts": {
-      "build": "tsc -p tsconfig.json",
+      "build": "npx tsc",
       "start": "nodemon src/index.ts",
       "typeorm": "typeorm-ts-node-commonjs"
    }
