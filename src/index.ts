@@ -14,21 +14,35 @@ const hostname = '127.0.0.1';
 const port = 5000;
 const FE_SERVER_PORT = 3000;
 const FE_origin = 'https://amurion97.github.io';
+const allowedDomains = [FE_origin, `http://localhost:${FE_SERVER_PORT}`];
+
+
+const corsFunction = (origin, callback) => {
+    // bypass the requests with no origin (like curl requests, mobile apps, etc )
+    if (!origin) return callback(null, true);
+
+    if (allowedDomains.indexOf(origin) === -1) {
+        var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
+        return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+}
 
 // create express app
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
-    cors: {
-        // origin: `http://${hostname}:${FE_SERVER_PORT}`,
-        origin: `http://localhost:${FE_SERVER_PORT}`,
-    }
+    cors:
+        {
+            origin: corsFunction
+        }
 });
 
 //app options
 app.use(cors({
     // origin: `http://${hostname}:${FE_SERVER_PORT}`,
-    origin: FE_origin,
+    // origin: FE_origin,
+    origin: corsFunction
     // credentials: true
 }))
 app.use(bodyParser.json());
