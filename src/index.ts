@@ -55,8 +55,10 @@ AppDataSource.initialize().then(async () => {
 
     let current = new Date(Date.now())
     server.listen(Number(port), "0.0.0.0", () => {
-        console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
-    Open http://${hostname}:${port}/v1/questions to see results`)
+        console.log(`${current.getHours()}:${current.getMinutes()} 
+        UTC: ${current.toUTCString()} 
+        Express server has started on port ${port}. 
+        Open http://${hostname}:${port}/v1/questions to see results`)
     });
 
     io.on('connection', socketController);
