@@ -10,7 +10,7 @@ import {RoomDetail} from "./entity/RoomDetail";
 import userService from "./service/userService";
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = process.env.PORT || 3000;
 const FE_LOCAL_PORT = 3000;
 const FE_local = `http://localhost:${FE_LOCAL_PORT}`
 const FE_github = 'https://amurion97.github.io';
@@ -54,7 +54,7 @@ AppDataSource.initialize().then(async () => {
     await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
 
     let current = new Date(Date.now())
-    server.listen(`0.0.0.0:${port}`, () => {
+    server.listen(Number(port), "0.0.0.0", () => {
         console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
     Open http://${hostname}:${port}/v1/questions to see results`)
     });
