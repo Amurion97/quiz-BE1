@@ -121,7 +121,7 @@ export function socketController(socket: Socket) {
                 io.to(lobby).emit('stop-test', {
                     message: "Giáo viên đã dừng bài thi! Đang nộp bài..."
                 });
-                setTimeout(()=> {
+                setTimeout(() => {
                     io.in(lobby).except(socket.id).disconnectSockets();
                 }, 1000)
 
@@ -149,16 +149,16 @@ export function socketController(socket: Socket) {
             if (arg.email == room.user.email) {
                 let roomDetail: RoomDetail = await roomDetailService.checkIsInRoom(room.code, arg.targetEmail);
                 if (roomDetail) {
-                    const sockets = await io.in(roomDetail.socketId).fetchSockets();
-                    console.log("sockets in", roomDetail.socketId, ":", sockets);
-                    const lobby = `lobby-${room.code}`;
                     callback({
                         success: true,
                     })
-                    io.to(lobby).emit('lobby-update', {
-                        email: roomDetail.email,
+
+                    io.to(roomDetail.socketId).emit('kick-out', {
+                        message: "Bạn bị xoá khỏi phòng thi. Đang chuyển về trang chủ...",
                         leave: true
                     });
+
+                    io.in(roomDetail.socketId).disconnectSockets();
                 } else {
                     callback({
                         success: false,
