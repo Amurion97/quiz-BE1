@@ -105,6 +105,9 @@ class RoomDetailService {
         await this.roomDetailRepository.update({id: id}, roomDetail)
     }
 
+    kickOut = async (email) => {
+        return await this.roomDetailRepository.delete({email: email})
+    }
 
 }
 

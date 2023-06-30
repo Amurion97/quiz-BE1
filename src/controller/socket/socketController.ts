@@ -6,6 +6,7 @@ import attemptService from "../../service/attemptService";
 import questionService from "../../service/questionService";
 import {RoomDetail} from "../../entity/RoomDetail";
 import testService from "../../service/testService";
+
 export function socketController(socket: Socket) {
     console.log('a user connected:', socket.id);
 
@@ -87,7 +88,7 @@ export function socketController(socket: Socket) {
     socket.on('start-test', async (arg, callback) => {
         console.log('user trying to start test:', arg);
         let room = await roomService.findActiveByCode(arg.roomCode);
-        console.log("room:", room)
+        // console.log("room:", room)
         if (room) {
             const email = arg.email
             const lobby = `lobby-${room.code}`;
@@ -105,16 +106,82 @@ export function socketController(socket: Socket) {
             }
         }
     });
-    
+
+    socket.on('stop-test', async (arg, callback) => {
+        console.log('user trying to stop test:', arg);
+        let room = await roomService.findActiveByCode(arg.roomCode);
+        console.log("room:", room)
+        if (room) {
+            const email = arg.email
+
+
+            if (email == room.user.email) {
+                const lobby = `lobby-${room.code}`;
+
+                io.to(lobby).emit('stop-test', {
+                    message: "Giáo viên đã dừng bài thi! Đang nộp bài..."
+                });
+                setTimeout(()=> {
+                    io.in(lobby).except(socket.id).disconnectSockets();
+                }, 1000)
+
+                let interval = setInterval(() => {
+                    console.log("check lobby while stopping:", io.sockets.adapter.rooms.get(lobby))
+
+                    if (io.sockets.adapter.rooms.get(lobby).size == 1) {
+                        clearInterval(interval)
+
+                        callback({
+                            success: true,
+                        })
+                    }
+                }, 500)
+
+            }
+        }
+    });
+
+    socket.on('kick-out', async (arg, callback) => {
+        console.log('user trying to kick out:', arg);
+        let room = await roomService.findActiveByCode(arg.roomCode);
+        console.log("room:", room)
+        if (room) {
+            if (arg.email == room.user.email) {
+                let roomDetail: RoomDetail = await roomDetailService.checkIsInRoom(room.code, arg.targetEmail);
+                if (roomDetail) {
+                    const sockets = await io.in(roomDetail.socketId).fetchSockets();
+                    console.log("sockets in", roomDetail.socketId, ":", sockets);
+                    const lobby = `lobby-${room.code}`;
+                    callback({
+                        success: true,
+                    })
+                    io.to(lobby).emit('lobby-update', {
+                        email: roomDetail.email,
+                        leave: true
+                    });
+                } else {
+                    callback({
+                        success: false,
+                        message: "Không tìm thấy email để xoá khỏi phòng thi"
+                    })
+                }
+            } else {
+                callback({
+                    success: false,
+                    message: "Bạn không phải chủ phòng thi"
+                })
+            }
+        }
+    });
 
     socket.on('question-submit', async (arg, callback) => {
         console.log('user submit answer for a question:', arg);
         let room = await roomService.findActiveByCode(arg.roomCode)
         if (room) {
-            console.log('room:', room)
+            // console.log('room:', room)
             const email = arg.email;
             let roomDetail: RoomDetail = await roomDetailService.checkIsInRoom(room.code, email);
-            console.log('roomDetail:', roomDetail)
+            // console.log('roomDetail:', roomDetail)
             if (roomDetail) {
                 let isCorrect = await attemptService.checkCorrectness(arg.choice, await questionService.findOne(arg.questionId))
                 console.log('isCorrect:', isCorrect);

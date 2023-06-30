@@ -5,7 +5,6 @@ class TypeController {
     all = async (req: Request, res: Response) => {
         try {
             let types = await TypeService.findAll();
-            console.log(types)
             res.status(201).json({
                 success: true,
                 data: types
