@@ -14,8 +14,9 @@ const port = process.env.PORT || 5000;
 const FE_LOCAL_PORT = 3000;
 const FE_local = `http://localhost:${FE_LOCAL_PORT}`
 const FE_github = 'https://amurion97.github.io';
-const FE_netlify = 'https://giang-inc.netlify.app';
-const allowedDomains = [FE_local, FE_github, FE_netlify];
+const FE_netlify_production = 'https://giang-inc.netlify.app';
+const FE_netlify_dev = 'https://dev--giang-inc.netlify.app';
+const allowedDomains = [FE_local, FE_github, FE_netlify_dev, FE_netlify_production];
 
 
 const corsFunction = (origin, callback) => {
