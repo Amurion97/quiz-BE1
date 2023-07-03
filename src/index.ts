@@ -41,7 +41,7 @@ export const io = new Server(server, {
 
 //app options
 app.use(cors({
-    origin: corsFunction
+    // origin: corsFunction
     // credentials: true
 }))
 app.use(bodyParser.json());
