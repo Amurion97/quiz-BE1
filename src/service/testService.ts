@@ -96,8 +96,8 @@ class TestService {
                     id: true
                 }
             },
-            skip: query.page && query.rows ? (query.page - 1) * query.rows : 0,
-            take: query.rows ? query.rows : 10,
+            // skip: query.page && query.rows ? (query.page - 1) * query.rows : 0,
+            // take: query.rows ? query.rows : 10,
         })
         return {tests: tests, testCount: testCount}
     }
