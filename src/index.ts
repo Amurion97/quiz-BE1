@@ -52,7 +52,7 @@ AppDataSource.initialize().then(async () => {
     //start listening after DB connect success
 
     await userService.resetAdmin();
-    await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
+    // await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
 
 
     let current = new Date(Date.now())
