@@ -12,7 +12,7 @@ userRouter.post('/login', userController.login);
 userRouter.post('/reset-request', userController.passwordResetRequest);
 userRouter.post('/otp-check', userController.OTPCheck);
 userRouter.post('/reset-password', userController.resetPassword);
-userRouter.get('/:id', userController.showUser);
+userRouter.get('/:id', auth, userController.showUser);
 // userRouter.get('/profile', auth, userController.editUser);
 // userRouter.put('/profile', auth, userController.editUser);
 userRouter.put('/password-change', auth, userController.changePassword);
