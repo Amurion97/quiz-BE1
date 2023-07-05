@@ -4,7 +4,7 @@ import {SnakeNamingStrategy} from "typeorm-naming-strategies";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    host: process.env.MYSQLDATABASE || "localhost",
+    host: process.env.MYSQLHOST || "localhost",
     port: process.env.MYSQLPORT ? parseInt(process.env.MYSQLPORT) : 3306,
     username: process.env.MYSQLUSER || "root",
     password: process.env.MYSQLPASSWORD || "123456",
