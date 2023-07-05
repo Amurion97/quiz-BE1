@@ -152,7 +152,7 @@ class UserService {
             return false;
         } else {
             let otp = OTP6Gen();
-            await this.userRepository.update({id: user.id}, {OTP: otp, OTPGenTime: new Date()})
+            await this.userRepository.update({id: user.id}, {OTP: otp, OTP_iat: new Date()})
             await this.OTPSend(email, otp)
             return true
         }
@@ -177,7 +177,7 @@ class UserService {
         let user = await this.oneByEmail(email);
         // console.log(user, user.OTP, OTP)
         if (user && user.OTP == OTP) {
-            let elapsedTime = Date.now() - user.OTPGenTime.getTime();
+            let elapsedTime = Date.now() - user.OTP_iat.getTime();
             console.log(elapsedTime);
             return elapsedTime < 60 * 60 * 1000;
         } else {
@@ -188,14 +188,14 @@ class UserService {
     resetPassword = async (reqBody) => {
         let user = await this.oneByEmail(reqBody.email);
         if (user && user.OTP == reqBody.OTP) {
-            let elapsedTime = Date.now() - user.OTPGenTime.getTime();
+            let elapsedTime = Date.now() - user.OTP_iat.getTime();
             console.log(elapsedTime);
             if (elapsedTime < 60 * 60 * 1000) {
                 let newPassword = await bcrypt.hash(reqBody.newPassword, 10)
                 await this.userRepository.update({id: user.id}, {
                     password: newPassword,
                     OTP: null,
-                    OTPGenTime: null
+                    OTP_iat: null
                 });
                 return true
             } else {

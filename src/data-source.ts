@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
     username: process.env.MYSQLUSER || "root",
     password: process.env.MYSQLPASSWORD || "123456",
     database: process.env.MYSQLDATABASE || "quiz5",
-    synchronize: false,
+    synchronize: true,
     logging: false,
     // entities: ["entity/*.ts"],
     // entities: [__dirname + '/../**/*.entity.{js,ts}'],

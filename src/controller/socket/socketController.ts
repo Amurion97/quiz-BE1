@@ -28,7 +28,7 @@ export function socketController(socket: Socket) {
 
     socket.on('join-lobby', async (arg, callback) => {
         try {
-            console.log('user join lobby:', arg);
+            // console.log('user join lobby:', arg);
             let room = await roomService.findActiveByCode(arg.roomCode)
             if (room) {
                 const email = arg.email
@@ -67,7 +67,7 @@ export function socketController(socket: Socket) {
 
                             callback(await roomDetailService.findAllActiveByRoom(room.id));
                         }
-                        console.log(io.sockets.adapter.rooms.get(lobby))
+                        // console.log(io.sockets.adapter.rooms.get(lobby))
 
                     }
                 }
@@ -85,7 +85,7 @@ export function socketController(socket: Socket) {
 
     socket.on('join-room', async (arg, callback) => {
         try {
-            console.log('user join room:', arg);
+            // console.log('user join room:', arg);
             let room = await roomService.findActiveByCode(arg.roomCode)
             if (room) {
                 socket.join(`room-${arg.roomCode}`);
@@ -98,7 +98,7 @@ export function socketController(socket: Socket) {
 
     socket.on('start-test', async (arg, callback) => {
         try {
-            console.log('user trying to start test:', arg);
+            // console.log('user trying to start test:', arg);
             let room = await roomService.findActiveByCode(arg.roomCode);
             // console.log("room:", room)
             if (room) {
@@ -124,9 +124,9 @@ export function socketController(socket: Socket) {
 
     socket.on('stop-test', async (arg, callback) => {
         try {
-            console.log('user trying to stop test:', arg);
+            // console.log('user trying to stop test:', arg);
             let room = await roomService.findActiveByCode(arg.roomCode);
-            console.log("room:", room)
+            // console.log("room:", room)
             if (room) {
                 const email = arg.email
                 if (email == room.user.email) {
@@ -140,7 +140,7 @@ export function socketController(socket: Socket) {
                     }, 1000)
 
                     let interval = setInterval(() => {
-                        console.log("check lobby while stopping:", io.sockets.adapter.rooms.get(lobby))
+                        // console.log("check lobby while stopping:", io.sockets.adapter.rooms.get(lobby))
 
                         if (io.sockets.adapter.rooms.get(lobby).size == 1) {
                             clearInterval(interval)
@@ -160,9 +160,9 @@ export function socketController(socket: Socket) {
 
     socket.on('kick-out', async (arg, callback) => {
         try {
-            console.log('user trying to kick out:', arg);
+            // console.log('user trying to kick out:', arg);
             let room = await roomService.findActiveByCode(arg.roomCode);
-            console.log("room:", room)
+            // console.log("room:", room)
             if (room) {
                 if (arg.email == room.user.email) {
                     let roomDetail: RoomDetail = await roomDetailService.checkIsInRoom(room.code, arg.targetEmail);
@@ -197,7 +197,7 @@ export function socketController(socket: Socket) {
 
     socket.on('question-submit', async (arg, callback) => {
         try {
-            console.log('user submit answer for a question:', arg);
+            // console.log('user submit answer for a question:', arg);
             let room = await roomService.findActiveByCode(arg.roomCode)
             if (room) {
                 // console.log('room:', room)

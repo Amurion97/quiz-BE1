@@ -28,7 +28,7 @@ export class User {
     @Column({type: "varchar", length: 6, nullable: true})
     OTP: string;
     @Column({nullable: true})
-    OTPGenTime: Date;
+    OTP_iat: Date;
 
     @OneToMany(() => Attempt, (attempt) => attempt.user)
     attempts: Attempt[]

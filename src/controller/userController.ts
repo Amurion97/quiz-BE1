@@ -33,7 +33,7 @@ class UserController {
 
     login = async (req: Request, res: Response) => {
         try {
-            console.log("user login:", req.body);
+            // console.log("user login:", req.body);
             let payload = await userService.loginCheck(req.body);
             if (payload) {
                 if (payload.isLocked) {
