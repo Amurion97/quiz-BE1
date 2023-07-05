@@ -48,6 +48,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('', router);
 
+console.log(process.env.MYSQLDATABASE, process.env.MYSQLPORT, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, process.env.MYSQLDATABASE)
+
 AppDataSource.initialize().then(async () => {
     //start listening after DB connect success
 
