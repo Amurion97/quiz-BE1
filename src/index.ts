@@ -65,5 +65,6 @@ AppDataSource.initialize().then(async () => {
 
     io.on('connection', socketController);
 
+    console.log("process.env.HELLO", process.env.HELLO)
 
 }).catch(error => console.log(error))

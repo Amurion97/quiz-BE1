@@ -6,6 +6,7 @@ import {checkRoleTeacherOrAdmin} from "../../middleware/checkRoleTeacherOrAdmin"
 
 const questionRouter = Router()
 questionRouter.get('', auth, checkRoleTeacherOrAdmin, questionController.all);
+questionRouter.get('/check/:id', auth, checkRoleTeacherOrAdmin, questionController.checkUsage);
 questionRouter.get('/:id', auth, checkRoleTeacherOrAdmin, questionController.one);
 questionRouter.post('', auth, checkRoleTeacherOrAdmin, questionController.save);
 questionRouter.put('/:id', auth, checkRoleTeacherOrAdmin, questionController.update);

@@ -19,6 +19,11 @@ class TestDetailService {
         await this.testDetailsRepository.delete({test: id})
     }
 
+    checkQuestionUsage = async (id) => {
+        // console.log(id)
+        return this.testDetailsRepository.findOneBy({question: {id: id}})
+    }
+
 }
 
 export default new TestDetailService();

@@ -3,6 +3,7 @@ import {Attempt} from "../entity/Attempt";
 import testService from "./testService";
 import {Test} from "../entity/Test";
 import {Question} from "../entity/Question";
+import {Answer} from "../entity/Answer";
 
 class AttemptService {
     private attemptRepository = AppDataSource.getRepository(Attempt);
@@ -49,6 +50,7 @@ class AttemptService {
         console.log("attempt to save:", attempt);
         const answers = attempt.answers;
         const test = await testService.findOne(attempt.test);
+        // console.log("test:", test.details[1].question.answers)
         let corrects = 0;
         test.details.forEach((item, index) => {
             if (this.checkCorrectness(answers[index], item.question) == true) {
@@ -64,10 +66,11 @@ class AttemptService {
 
     checkCorrectness = (choice: number[] | number, question: Question) => {
         if (question.type.id <= 2) {
-            const trueAnswerID = question.answers.find(item => item.isTrue).id;
-            if (choice == trueAnswerID) {
+            const trueAnswer: Answer = question.answers.find(item => item.isTrue);
+            // console.log("trueAnswer:", trueAnswer)
+            if (choice == trueAnswer.id) {
                 return true
-            } else return trueAnswerID;
+            } else return trueAnswer.id;
         } else {
             const trueAnswers = question.answers.filter(item => item.isTrue);
             const trueAnswerIDs = trueAnswers.map(item => item.id).sort((a, b) => a - b);
