@@ -16,7 +16,11 @@ class UserService {
     private transporter = nodemailer.createTransport({
         host: "smtp-mail.outlook.com",
         port: 587,
-        secure: false, // true for 465, false for other ports
+        // secure: false, // true for 465, false for other ports
+        tls: {
+            ciphers: "SSLv3",
+            rejectUnauthorized: false,
+        },
         auth: {
             user: "giangnguyenbackup2@gmail.com",
             pass: "4allilove",
