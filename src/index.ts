@@ -19,7 +19,7 @@ const FE_netlify_dev = 'https://dev--giangschool-quiz.netlify.app';
 const allowedDomains = [FE_local, FE_github, FE_netlify_dev, FE_netlify_production];
 
 
-const corsFunction = (origin, callback) => {
+const corsOriginCheckFunction = (origin, callback) => {
     // bypass the requests with no origin (like curl requests, mobile apps, etc )
     if (!origin) return callback(null, true);
 
@@ -30,20 +30,18 @@ const corsFunction = (origin, callback) => {
     return callback(null, true);
 }
 
+const corsOptions = {
+    origin : corsOriginCheckFunction
+}
 // create express app
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
-    cors: {
-        origin: corsFunction
-    }
+    cors: corsOptions
 });
 
 //app options
-app.use(cors({
-    // origin: corsFunction
-    // credentials: true
-}))
+app.use(cors(corsOptions))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('', router);
