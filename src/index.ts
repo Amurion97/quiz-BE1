@@ -6,7 +6,6 @@ import * as cors from 'cors';
 import * as http from "http";
 import {Server} from "socket.io";
 import {socketController} from "./controller/socket/socketController";
-import {RoomDetail} from "./entity/RoomDetail";
 import userService from "./service/userService";
 
 const hostname = '127.0.0.1';
@@ -24,7 +23,7 @@ const corsOriginCheckFunction = (origin, callback) => {
     if (!origin) return callback(null, true);
 
     if (allowedDomains.indexOf(origin) === -1) {
-        var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
+        let msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
         return callback(new Error(msg), false);
     }
     return callback(null, true);
@@ -50,6 +49,7 @@ AppDataSource.initialize().then(async () => {
     //start listening after DB connect success
 
     await userService.resetAdmin();
+    await userService.resetDefaultTeacher();
     // await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
 
 

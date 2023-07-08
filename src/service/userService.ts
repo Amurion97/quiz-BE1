@@ -27,6 +27,9 @@ class UserService {
         },
     });
 
+    private adminEmail = 'admin@gmail.com';
+    public defaultTeacherEmail = 'teacher-quiz@outlook.com.vn';
+
     save = async (user) => {
         let hashedPassword = bcrypt.hashSync(user.password, 10);
         user.password = hashedPassword;
@@ -36,7 +39,7 @@ class UserService {
 
     resetAdmin = async () => {
         let admin = await this.userRepository.findOneBy({
-            email: 'admin@gmail.com'
+            email: this.adminEmail
         })
         let hashedPassword = bcrypt.hashSync('123123', 10);
         if (!admin) {
@@ -45,9 +48,25 @@ class UserService {
 
         admin.password = hashedPassword;
         admin.role = await roleService.findOne(1);
-        admin.email = 'admin@gmail.com'
+        admin.email = this.adminEmail;
         await this.userRepository.save(admin);
     }
+
+    resetDefaultTeacher = async () => {
+        let defaultTeacher = await this.userRepository.findOneBy({
+            email: this.defaultTeacherEmail
+        })
+        let hashedPassword = bcrypt.hashSync('123456', 10);
+        if (!defaultTeacher) {
+            defaultTeacher = new User()
+        }
+
+        defaultTeacher.password = hashedPassword;
+        defaultTeacher.role = await roleService.findOne(2);
+        defaultTeacher.email = this.defaultTeacherEmail;
+        await this.userRepository.save(defaultTeacher);
+    }
+
     loginCheck = async (user) => {
         let foundUser = await this.userRepository.findOne({
             relations: {
