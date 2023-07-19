@@ -4,10 +4,13 @@ import {checkRoleAdmin} from "../../middleware/checkRoleAdmin";
 import {auth} from "../../middleware/auth";
 
 
-const typeRouter = Router()
-typeRouter.get('', auth, typeController.all);
-typeRouter.post('', auth, checkRoleAdmin, typeController.save);
-typeRouter.put('/:id', auth, checkRoleAdmin, typeController.update);
-typeRouter.delete('/:id', auth, checkRoleAdmin, typeController.delete);
+const typeRouter = Router();
+typeRouter.use(auth);
+typeRouter.get('', typeController.all);
+
+typeRouter.use(checkRoleAdmin);
+typeRouter.post('', typeController.save);
+typeRouter.put('/:id', typeController.update);
+typeRouter.delete('/:id', typeController.delete);
 
 export default typeRouter

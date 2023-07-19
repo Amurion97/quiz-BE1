@@ -5,9 +5,10 @@ import {checkRoleAdmin} from "../../middleware/checkRoleAdmin";
 import {checkRoleTeacherOrAdmin} from "../../middleware/checkRoleTeacherOrAdmin";
 
 
-const roomRouter = Router()
-roomRouter.get('/', auth, checkRoleAdmin, roomController.all);
-roomRouter.get('/code/:code', auth, checkRoleAdmin, roomController.findOne);
-roomRouter.post('/', auth, checkRoleTeacherOrAdmin, roomController.save);
+const roomRouter = Router();
+roomRouter.use(auth);
+roomRouter.get('/',checkRoleAdmin, roomController.all);
+roomRouter.get('/code/:code', checkRoleAdmin, roomController.findOne);
+roomRouter.post('/',checkRoleTeacherOrAdmin, roomController.save);
 
 export default roomRouter

@@ -5,8 +5,10 @@ import {checkRoleTeacherOrAdmin} from "../../middleware/checkRoleTeacherOrAdmin"
 
 
 const answerRouter = Router()
-answerRouter.post('', auth, checkRoleTeacherOrAdmin, answerController.save);
-answerRouter.put('/:id', auth, checkRoleTeacherOrAdmin, answerController.update);
-answerRouter.delete('/:id', auth, checkRoleTeacherOrAdmin, answerController.delete);
+answerRouter.use(auth);
+answerRouter.use(checkRoleTeacherOrAdmin);
+answerRouter.post('', answerController.save);
+answerRouter.put('/:id', answerController.update);
+answerRouter.delete('/:id', answerController.delete);
 
 export default answerRouter

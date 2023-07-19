@@ -5,9 +5,12 @@ import {checkRoleAdmin} from "../../middleware/checkRoleAdmin";
 
 
 const difficultyRouter = Router()
-difficultyRouter.get('', auth, difficultyController.all);
-difficultyRouter.post('', auth, checkRoleAdmin, difficultyController.save);
-difficultyRouter.put('/:id', auth, checkRoleAdmin, difficultyController.update);
-difficultyRouter.delete('/:id', auth, checkRoleAdmin, difficultyController.delete);
+difficultyRouter.use(auth);
+difficultyRouter.get('', difficultyController.all);
+
+difficultyRouter.use(checkRoleAdmin)
+difficultyRouter.post('', difficultyController.save);
+difficultyRouter.put('/:id', difficultyController.update);
+difficultyRouter.delete('/:id', difficultyController.delete);
 
 export default difficultyRouter

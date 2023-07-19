@@ -5,12 +5,15 @@ import {auth} from "../../middleware/auth";
 import {checkAccDefaultTeacher} from "../../middleware/checkAccDefaultTeacher";
 
 
-const testRouter = Router()
-testRouter.get('/', auth, testController.findAll);
-testRouter.get('/brief/:id', auth, testController.findOneBrief);
-testRouter.get('/:id', auth, testController.findOne);
-testRouter.post('', auth, checkRoleTeacherOrAdmin, testController.save);
+const testRouter = Router();
+testRouter.use(auth);
+testRouter.get('/', testController.findAll);
+testRouter.get('/brief/:id', testController.findOneBrief);
+testRouter.get('/:id', testController.findOne);
+
+testRouter.use(checkRoleTeacherOrAdmin);
+testRouter.post('', testController.save);
 // testRouter.put('/:id', testController.update);
-testRouter.delete('/:id', auth, checkRoleTeacherOrAdmin, checkAccDefaultTeacher, testController.delete);
+testRouter.delete('/:id', checkAccDefaultTeacher, testController.delete);
 
 export default testRouter

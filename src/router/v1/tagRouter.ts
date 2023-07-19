@@ -5,10 +5,13 @@ import {auth} from "../../middleware/auth";
 import {checkAccDefaultTeacher} from "../../middleware/checkAccDefaultTeacher";
 
 
-const tagRouter = Router()
-tagRouter.get('', auth, tagController.all);
-tagRouter.post('', auth, checkRoleTeacherOrAdmin, tagController.save);
-tagRouter.put('/:id', auth, checkRoleTeacherOrAdmin, tagController.update);
-tagRouter.delete('/:id', auth, checkRoleTeacherOrAdmin, checkAccDefaultTeacher, tagController.delete);
+const tagRouter = Router();
+tagRouter.use(auth);
+tagRouter.get('', tagController.all);
+
+tagRouter.use(checkRoleTeacherOrAdmin);
+tagRouter.post('', tagController.save);
+tagRouter.put('/:id', tagController.update);
+tagRouter.delete('/:id', checkAccDefaultTeacher, tagController.delete);
 
 export default tagRouter
