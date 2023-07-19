@@ -11,6 +11,10 @@ class TagService {
         })
     }
 
+    findOne = async (id: number) => {
+        return await this.tagRepository.findOneBy({id: id})
+    }
+
     findAllWithQuestions = async () => {
         return await this.tagRepository.find({
             relations: {
