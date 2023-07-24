@@ -9,6 +9,7 @@ import nodemailer = require("nodemailer");
 import roleService from "./roleService";
 import qs = require("qs");
 import {OTP6Gen} from "./misc/OTP";
+import {FE_netlify_production} from "../index";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -184,15 +185,15 @@ class UserService {
     OTPSend = async (email, OTP) => {
         let query: string = qs.stringify({email: email, otp: OTP});
         console.log("query:", query);
-        let resetPasswordURL = `http://localhost:3000/reset-password?${query}`;
+        let resetPasswordURL = `${FE_netlify_production}/reset-password?${query}`;
         // send mail with defined transport object
         let info = await this.transporter.sendMail({
-            from: '"Quit Inc. 👻" <giangnguyenbackup2@gmail.com>', // sender address
+            from: '"Giang School Inc. 👻" <giangnguyenbackup2@gmail.com>', // sender address
             to: email, // list of receivers
             subject: "Reset password request", // Subject line
-            text: `Click this link to reset your password: ${resetPasswordURL}`, // plain text body
-            html: "<b>Click this link to reset your password:</b>" +
-                `<a><p>${resetPasswordURL}</p></a>`, // html body
+            text: `Copy and paste this link to URL to reset your password: ${resetPasswordURL}`, // plain text body
+            html: "<b>Click (or copy & paste) this link to reset your password:</b>" +
+                `<p><a>${resetPasswordURL}</a></p>`, // html body
         });
     }
 

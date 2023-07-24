@@ -13,7 +13,7 @@ const port = process.env.PORT || 5000;
 const FE_LOCAL_PORT = 3000;
 const FE_local = `http://localhost:${FE_LOCAL_PORT}`
 const FE_github = 'https://amurion97.github.io';
-const FE_netlify_production = 'https://giangschool-quiz.netlify.app';
+export const FE_netlify_production = 'https://giangschool-quiz.netlify.app';
 const FE_netlify_dev = 'https://dev--giangschool-quiz.netlify.app';
 const allowedDomains = [FE_local, FE_github, FE_netlify_dev, FE_netlify_production];
 
