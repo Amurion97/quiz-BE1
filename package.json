@@ -32,6 +32,7 @@
    },
    "scripts": {
       "start": "nodemon src/index.ts",
+      "start:prod": "ts-node src/index.ts",
       "typeorm": "typeorm-ts-node-commonjs"
    }
 }

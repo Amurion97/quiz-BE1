@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
     port: process.env.MYSQLPORT ? parseInt(process.env.MYSQLPORT) : 3306,
     username: process.env.MYSQLUSER || "root",
     password: process.env.MYSQLPASSWORD || "123456",
-    database: process.env.MYSQLDATABASE || "quiz5",
+    database: process.env.MYSQLDATABASE || "railway",
     synchronize: true,
     logging: false,
     // entities: ["entity/*.ts"],

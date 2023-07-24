@@ -114,7 +114,7 @@ class TestService {
                     question: {
                         answers: true,
                         type: true
-                    }
+                }
                 },
                 attempts: true,
             },
