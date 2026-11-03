@@ -1,6 +1,9 @@
+import "dotenv/config"
 import "reflect-metadata"
 import {DataSource} from "typeorm"
 import {SnakeNamingStrategy} from "typeorm-naming-strategies";
+
+const useSsl = (process.env.MYSQL_SSL || "").toUpperCase() === "REQUIRED";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -9,6 +12,7 @@ export const AppDataSource = new DataSource({
     username: process.env.MYSQLUSER || "root",
     password: process.env.MYSQLPASSWORD || "123456",
     database: process.env.MYSQLDATABASE || "railway",
+    ssl: useSsl ? {rejectUnauthorized: false} : undefined,
     synchronize: true,
     logging: false,
     // entities: ["entity/*.ts"],

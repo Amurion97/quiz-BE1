@@ -7,6 +7,7 @@ import * as http from "http";
 import {Server} from "socket.io";
 import {socketController} from "./controller/socket/socketController";
 import userService from "./service/userService";
+import { mountSwagger } from "./swagger";
 
 const hostname = '127.0.0.1';
 const port = process.env.PORT || 5000;
@@ -43,6 +44,7 @@ export const io = new Server(server, {
 app.use(cors(corsOptions))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+mountSwagger(app);
 app.use('', router);
 
 AppDataSource.initialize().then(async () => {
