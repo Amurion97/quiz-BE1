@@ -53,7 +53,7 @@ class UserController {
         } catch (e) {
             console.log("error in login:", e)
             res.status(401).json({
-                message: e.message,
+                message: "Wrong email or password",
                 success: false
             })
         }
@@ -61,7 +61,6 @@ class UserController {
 
     }
     all = async (req: Request, res: Response) => {
-        console.log("check ", req["decode"])
         try {
             let users = await userService.findAll();
             res.status(201).json({
@@ -168,19 +167,12 @@ class UserController {
 
     passwordResetRequest = async (req: Request, res: Response) => {
         try {
-            console.log("user reset password:", req.body);
-            let success = await userService.passwordResetRequest(req.body.email);
-            if (success) {
-                res.status(200).json({
-                    success: true,
-                    data: "Email sent"
-                });
-            } else {
-                res.status(404).json({
-                    success: false,
-                    data: "Email not found"
-                });
-            }
+            console.log("password reset request received");
+            await userService.passwordResetRequest(req.body.email);
+            res.status(200).json({
+                success: true,
+                data: "If this email is registered, a reset link has been sent"
+            });
         } catch (e) {
             console.log("error while password reset:", e)
             res.status(500).json({
@@ -192,7 +184,7 @@ class UserController {
 
     OTPCheck = async (req: Request, res: Response) => {
         try {
-            console.log("user OTP check:", req.body);
+            console.log("OTP check received");
             let success = await userService.OTPCheck(req.body.email, req.body.OTP);
             if (success) {
                 res.status(200).json({
@@ -216,7 +208,7 @@ class UserController {
 
     resetPassword = async (req: Request, res: Response) => {
         try {
-            console.log("user reset password:", req.body);
+            console.log("password reset received");
             let success = await userService.resetPassword( req.body);
             if (success) {
                 res.status(200).json({
