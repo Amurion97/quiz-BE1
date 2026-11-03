@@ -107,31 +107,34 @@ class UserController {
     //     }
     // }
     changePassword = async (req: Request, res: Response) => {
-        let id = req["decode"]["id"];
-        let user = await userService.one(id);
-        let userPassword = user.password;
-        bcrypt.compare(req.body.password, userPassword, async function (err, result) {
-            if (result === true) {
-                try {
-                    let user = req.body;
-                    let id = req["decode"]["id"];
-                    let newUser = await userService.updatePassword(id, user);
-                    res.status(201).json(newUser);
-                } catch (e) {
-                    res.status(500).json({
-                        message: 'error in editUser',
-                        success: false
-                    })
-                }
-            } else {
-                res.status(500).json({
-                    message: 'error in editUser',
-                    success: false
-                })
+        try {
+            let id = req["decode"]["id"];
+            let user = await userService.one(id);
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found"
+                });
             }
-        });
-
-
+            let match = await bcrypt.compare(req.body.password, user.password);
+            if (!match) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Current password is incorrect"
+                });
+            }
+            await userService.updatePassword(id, req.body);
+            res.status(200).json({
+                success: true,
+                data: "Password changed successfully"
+            });
+        } catch (e) {
+            console.log("error in changePassword:", e)
+            res.status(500).json({
+                message: "Error while changing password",
+                success: false
+            })
+        }
     }
     updateRoleOfUser = async (req: Request, res: Response) => {
         try {
