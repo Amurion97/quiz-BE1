@@ -5,7 +5,7 @@ class RoleController {
     all = async (req: Request, res: Response) => {
         try {
             let roles = await roleService.findAll();
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 data: roles
             });
@@ -35,7 +35,7 @@ class RoleController {
     update = async (req: Request, res: Response) => {
         try {
             await roleService.update(req.params.id, req.body);
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 data: 'update role success!'
             });
@@ -50,7 +50,7 @@ class RoleController {
     delete = async (req: Request, res: Response) => {
         try {
             await roleService.delete(req.params.id);
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 data: 'delete role success!'
             });
