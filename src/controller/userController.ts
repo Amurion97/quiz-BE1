@@ -2,6 +2,7 @@ import userService from "../service/userService";
 import {Request, Response} from "express";
 import {decode} from "punycode";
 import * as bcrypt from "bcrypt";
+import {ok, fail} from "../utils/responseHelper";
 
 class UserController {
 
@@ -10,22 +11,13 @@ class UserController {
             let check = await userService.checkUsedEmail(req.body.email)
             if (!check) {
                 await userService.save(req.body);
-                res.status(201).json({
-                    success: true,
-                    data: req.body.email
-                });
+                return ok(res, req.body.email, 201);
             } else {
-                res.status(409).json({
-                    success: false,
-                    message: 'Used email'
-                });
+                return fail(res, 409, 'Used email');
             }
         } catch (e) {
             console.log("error in signup:", e)
-            res.status(500).json({
-                message: 'error in signup',
-                success: false
-            })
+            return fail(res, 500, 'error in signup');
         }
 
     }
@@ -37,25 +29,16 @@ class UserController {
             let payload = await userService.loginCheck(req.body);
             if (payload) {
                 if (payload.isLocked) {
-                    res.status(403).json({
-                        message: "Locked account",
-                        success: false
-                    })
+                    return fail(res, 403, "Locked account");
                 } else {
-                    res.status(200).json({
-                        success: true,
-                        data: payload
-                    });
+                    return ok(res, payload);
                 }
             } else {
                 throw new Error("Wrong email or password")
             }
         } catch (e) {
             console.log("error in login:", e)
-            res.status(401).json({
-                message: "Wrong email or password",
-                success: false
-            })
+            return fail(res, 401, "Wrong email or password");
         }
 
 
@@ -63,32 +46,20 @@ class UserController {
     all = async (req: Request, res: Response) => {
         try {
             let users = await userService.findAll();
-            res.status(201).json({
-                success: true,
-                data: users
-            });
+            return ok(res, users, 201);
         } catch (e) {
             console.log("error in get all user:", e)
-            res.status(500).json({
-                message: 'error in get all user',
-                success: false
-            })
+            return fail(res, 500, 'error in get all user');
         }
     }
     showUser = async (req: Request, res: Response) => {
         try {
             let userId = req.params.id;
             let user = await userService.one(userId)
-            res.status(201).json({
-                success: true,
-                data: user
-            });
+            return ok(res, user, 201);
         } catch (e) {
             console.log("error in showUser:", e)
-            res.status(500).json({
-                message: 'error in showUser',
-                success: false
-            })
+            return fail(res, 500, 'error in showUser');
         }
     }
 
@@ -111,60 +82,37 @@ class UserController {
             let id = req["decode"]["id"];
             let user = await userService.one(id);
             if (!user) {
-                return res.status(404).json({
-                    success: false,
-                    message: "User not found"
-                });
+                return fail(res, 404, "User not found");
             }
             let match = await bcrypt.compare(req.body.password, user.password);
             if (!match) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Current password is incorrect"
-                });
+                return fail(res, 401, "Current password is incorrect");
             }
             await userService.updatePassword(id, req.body);
-            res.status(200).json({
-                success: true,
-                data: "Password changed successfully"
-            });
+            return ok(res, "Password changed successfully");
         } catch (e) {
             console.log("error in changePassword:", e)
-            res.status(500).json({
-                message: "Error while changing password",
-                success: false
-            })
+            return fail(res, 500, "Error while changing password");
         }
     }
     updateRoleOfUser = async (req: Request, res: Response) => {
         try {
             let id = req.params.id;
             await userService.updateRoleOfUser(id)
-            res.status(201).json({
-                messege: "update role success"
-            });
+            return ok(res, "update role success", 201);
         } catch (e) {
             console.log("error in updateRoleOfUser:", e)
-            res.status(500).json({
-                message: 'error in updateRoleOfUser',
-                success: false
-            })
+            return fail(res, 500, 'error in updateRoleOfUser');
         }
     }
 
     delete = async (req: Request, res: Response) => {
         try {
             await userService.delete(req.params.id);
-            res.status(200).json({
-                success: true,
-                data: 'delete user success!'
-            });
+            return ok(res, 'delete user success!');
         } catch (e) {
             console.log("error in delete user:", e)
-            res.status(500).json({
-                message: 'error in delete user',
-                success: false
-            })
+            return fail(res, 500, 'error in delete user');
         }
     }
 
@@ -172,16 +120,10 @@ class UserController {
         try {
             console.log("password reset request received");
             await userService.passwordResetRequest(req.body.email);
-            res.status(200).json({
-                success: true,
-                data: "If this email is registered, a reset link has been sent"
-            });
+            return ok(res, "If this email is registered, a reset link has been sent");
         } catch (e) {
             console.log("error while password reset:", e)
-            res.status(500).json({
-                message: "Error while password reset",
-                success: false
-            })
+            return fail(res, 500, "Error while password reset");
         }
     }
 
@@ -190,22 +132,13 @@ class UserController {
             console.log("OTP check received");
             let success = await userService.OTPCheck(req.body.email, req.body.OTP);
             if (success) {
-                res.status(200).json({
-                    success: true,
-                    data: "OTP correct"
-                });
+                return ok(res, "OTP correct");
             } else {
-                res.status(404).json({
-                    success: false,
-                    data: "OTP incorrect or expired"
-                });
+                return fail(res, 404, "OTP incorrect or expired");
             }
         } catch (e) {
             console.log("error while password reset:", e)
-            res.status(500).json({
-                message: "Error while password reset",
-                success: false
-            })
+            return fail(res, 500, "Error while password reset");
         }
     }
 
@@ -214,22 +147,13 @@ class UserController {
             console.log("password reset received");
             let success = await userService.resetPassword( req.body);
             if (success) {
-                res.status(200).json({
-                    success: true,
-                    data: "Password reset"
-                });
+                return ok(res, "Password reset");
             } else {
-                res.status(404).json({
-                    success: false,
-                    data: "OTP incorrect or expired"
-                });
+                return fail(res, 404, "OTP incorrect or expired");
             }
         } catch (e) {
             console.log("error while password reset:", e)
-            res.status(500).json({
-                message: "Error while password reset",
-                success: false
-            })
+            return fail(res, 500, "Error while password reset");
         }
     }
 }
