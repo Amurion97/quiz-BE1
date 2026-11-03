@@ -9,7 +9,7 @@ import nodemailer = require("nodemailer");
 import roleService from "./roleService";
 import qs = require("qs");
 import {OTP6Gen} from "./misc/OTP";
-import {FE_netlify_production} from "../index";
+import {FE_netlify_production} from "../config";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
