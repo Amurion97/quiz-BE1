@@ -15,6 +15,7 @@ export const AppDataSource = new DataSource({
     ssl: useSsl ? {rejectUnauthorized: false} : undefined,
     synchronize: true,
     logging: false,
+    connectTimeout: 10000,
     // entities: ["entity/*.ts"],
     // entities: [__dirname + '/../**/*.entity.{js,ts}'],
     entities: [__dirname + '/entity/*.{js,ts}'],
