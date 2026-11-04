@@ -16,7 +16,15 @@ const FE_local = `http://localhost:${FE_LOCAL_PORT}`
 const FE_github = 'https://amurion97.github.io';
 export const FE_netlify_production = 'https://giangschool-quiz.netlify.app';
 const FE_netlify_dev = 'https://dev--giangschool-quiz.netlify.app';
-const allowedDomains = [FE_local, FE_github, FE_netlify_dev, FE_netlify_production];
+// Swagger "Try it out" sends the page's own origin. Include this server, not only the front ends.
+const selfOrigins = [
+    `http://localhost:${port}`,
+    `http://127.0.0.1:${port}`,
+    "https://quiz-be1.onrender.com",
+    process.env.RENDER_EXTERNAL_URL,
+].filter((origin): origin is string => Boolean(origin))
+    .map(origin => origin.replace(/\/$/, ""));
+const allowedDomains = [FE_local, FE_github, FE_netlify_dev, FE_netlify_production, ...selfOrigins];
 
 
 const corsOriginCheckFunction = (origin, callback) => {
