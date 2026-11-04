@@ -5,7 +5,6 @@ class TagController {
     all = async (req: Request, res: Response) => {
         try {
             let tags = await TagService.findAll();
-            console.log(tags)
             res.status(201).json({
                 success: true,
                 data: tags

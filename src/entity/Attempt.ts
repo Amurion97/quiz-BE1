@@ -18,6 +18,9 @@ export class Attempt {
     @Column()
     incorrects: number;
 
+    @Column()
+    choices: string;
+
     @ManyToOne(() => User, (user) => user.attempts)
     user: User;
     @ManyToOne(() => Test, (tag) => tag.attempts)

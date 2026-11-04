@@ -52,7 +52,7 @@ class TestController {
     }
     save = async (req: Request, res: Response) => {
         try {
-            console.log(req.body)
+            // console.log(req.body)
             await testService.save(req.body);
 
             res.status(201).json({

@@ -3,6 +3,7 @@ import {Attempt} from "../entity/Attempt";
 import testService from "./testService";
 import {Test} from "../entity/Test";
 import {Question} from "../entity/Question";
+import {Answer} from "../entity/Answer";
 
 class AttemptService {
     private attemptRepository = AppDataSource.getRepository(Attempt);
@@ -49,48 +50,27 @@ class AttemptService {
         console.log("attempt to save:", attempt);
         const answers = attempt.answers;
         const test = await testService.findOne(attempt.test);
+        // console.log("test:", test.details[1].question.answers)
         let corrects = 0;
         test.details.forEach((item, index) => {
             if (this.checkCorrectness(answers[index], item.question) == true) {
                 corrects++
             }
-
-            // if (item.question.type.id <= 2) {
-            //     const trueAnswerID = item.question.answers.find(item => item.isTrue).id
-            //     if (answers[index] == trueAnswerID) {
-            //         corrects++
-            //     }
-            // } else if (item.question.type.id == 3) {
-            //     const trueAnswers = item.question.answers.filter(item => item.isTrue);
-            //     const trueAnswerIDs = trueAnswers.map(item => item.id).sort((a, b) => a - b);
-            //     if (trueAnswerIDs.length == answers[index].length) {
-            //         answers[index] = answers[index].sort((a, b) => a - b);
-            //         let correct = true;
-            //         for (let i = 0; i < trueAnswerIDs.length; i++) {
-            //             if (trueAnswerIDs[i] != answers[index][i]) {
-            //                 correct = false;
-            //                 break;
-            //             }
-            //         }
-            //         if (correct) {
-            //             corrects++
-            //         }
-            //     }
-            // }
-
         });
         attempt.corrects = corrects;
         attempt.incorrects = test.details.length - corrects;
         attempt.score = parseFloat((corrects * 100 / test.details.length).toFixed(1));
+        attempt.choices = JSON.stringify(answers);
         return await this.attemptRepository.save(attempt);
     }
 
     checkCorrectness = (choice: number[] | number, question: Question) => {
         if (question.type.id <= 2) {
-            const trueAnswerID = question.answers.find(item => item.isTrue).id;
-            if (choice == trueAnswerID) {
+            const trueAnswer: Answer = question.answers.find(item => item.isTrue);
+            // console.log("trueAnswer:", trueAnswer)
+            if (choice == trueAnswer.id) {
                 return true
-            } else return trueAnswerID;
+            } else return trueAnswer.id;
         } else {
             const trueAnswers = question.answers.filter(item => item.isTrue);
             const trueAnswerIDs = trueAnswers.map(item => item.id).sort((a, b) => a - b);

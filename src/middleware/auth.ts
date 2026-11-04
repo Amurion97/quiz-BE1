@@ -10,24 +10,24 @@ export const auth = (req, res, next) => {
                 if (err) {
                     res.status(401).json({
                         error: err.message,
-                        message: "phien dang nhap het han, vui long dang nhap lai",
+                        message: "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại",
                         success: false
                     })
                 } else {
-                    console.log("payload:", payload)
+                    // console.log("payload:", payload)
                     req.decode = payload;
                     return next();
                 }
             })
         } else {
             res.status(401).json({
-                message: "authorization header invalid",
+                message: "No token provided",
                 success: false
             })
         }
     } else {
         res.status(401).json({
-            message: "ban chua dang nhap",
+            message: "No token provided",
             success: false
         })
     }

@@ -9,6 +9,7 @@ import nodemailer = require("nodemailer");
 import roleService from "./roleService";
 import qs = require("qs");
 import {OTP6Gen} from "./misc/OTP";
+import {FE_netlify_production} from "../index";
 
 class UserService {
     private userRepository = AppDataSource.getRepository(User);
@@ -16,12 +17,19 @@ class UserService {
     private transporter = nodemailer.createTransport({
         host: "smtp-mail.outlook.com",
         port: 587,
-        secure: false, // true for 465, false for other ports
+        // secure: false, // true for 465, false for other ports
+        tls: {
+            ciphers: "SSLv3",
+            rejectUnauthorized: false,
+        },
         auth: {
             user: "giangnguyenbackup2@gmail.com",
             pass: "4allilove",
         },
     });
+
+    private adminEmail = 'admin@gmail.com';
+    public defaultTeacherEmail = 'teacher-quiz@outlook.com.vn';
 
     save = async (user) => {
         let hashedPassword = bcrypt.hashSync(user.password, 10);
@@ -32,7 +40,7 @@ class UserService {
 
     resetAdmin = async () => {
         let admin = await this.userRepository.findOneBy({
-            email: 'admin@gmail.com'
+            email: this.adminEmail
         })
         let hashedPassword = bcrypt.hashSync('123123', 10);
         if (!admin) {
@@ -41,9 +49,25 @@ class UserService {
 
         admin.password = hashedPassword;
         admin.role = await roleService.findOne(1);
-        admin.email = 'admin@gmail.com'
+        admin.email = this.adminEmail;
         await this.userRepository.save(admin);
     }
+
+    resetDefaultTeacher = async () => {
+        let defaultTeacher = await this.userRepository.findOneBy({
+            email: this.defaultTeacherEmail
+        })
+        let hashedPassword = bcrypt.hashSync('123456', 10);
+        if (!defaultTeacher) {
+            defaultTeacher = new User()
+        }
+
+        defaultTeacher.password = hashedPassword;
+        defaultTeacher.role = await roleService.findOne(2);
+        defaultTeacher.email = this.defaultTeacherEmail;
+        await this.userRepository.save(defaultTeacher);
+    }
+
     loginCheck = async (user) => {
         let foundUser = await this.userRepository.findOne({
             relations: {
@@ -152,7 +176,7 @@ class UserService {
             return false;
         } else {
             let otp = OTP6Gen();
-            await this.userRepository.update({id: user.id}, {OTP: otp, OTPGenTime: new Date()})
+            await this.userRepository.update({id: user.id}, {OTP: otp, OTP_iat: new Date()})
             await this.OTPSend(email, otp)
             return true
         }
@@ -161,15 +185,15 @@ class UserService {
     OTPSend = async (email, OTP) => {
         let query: string = qs.stringify({email: email, otp: OTP});
         console.log("query:", query);
-        let resetPasswordURL = `http://localhost:3000/reset-password?${query}`;
+        let resetPasswordURL = `${FE_netlify_production}/reset-password?${query}`;
         // send mail with defined transport object
         let info = await this.transporter.sendMail({
-            from: '"Quit Inc. 👻" <giangnguyenbackup2@gmail.com>', // sender address
+            from: '"Giang School Inc. 👻" <giangnguyenbackup2@gmail.com>', // sender address
             to: email, // list of receivers
             subject: "Reset password request", // Subject line
-            text: `Click this link to reset your password: ${resetPasswordURL}`, // plain text body
-            html: "<b>Click this link to reset your password:</b>" +
-                `<a><p>${resetPasswordURL}</p></a>`, // html body
+            text: `Copy and paste this link to URL to reset your password: ${resetPasswordURL}`, // plain text body
+            html: "<b>Click (or copy & paste) this link to reset your password:</b>" +
+                `<p><a>${resetPasswordURL}</a></p>`, // html body
         });
     }
 
@@ -177,7 +201,7 @@ class UserService {
         let user = await this.oneByEmail(email);
         // console.log(user, user.OTP, OTP)
         if (user && user.OTP == OTP) {
-            let elapsedTime = Date.now() - user.OTPGenTime.getTime();
+            let elapsedTime = Date.now() - user.OTP_iat.getTime();
             console.log(elapsedTime);
             return elapsedTime < 60 * 60 * 1000;
         } else {
@@ -188,14 +212,14 @@ class UserService {
     resetPassword = async (reqBody) => {
         let user = await this.oneByEmail(reqBody.email);
         if (user && user.OTP == reqBody.OTP) {
-            let elapsedTime = Date.now() - user.OTPGenTime.getTime();
+            let elapsedTime = Date.now() - user.OTP_iat.getTime();
             console.log(elapsedTime);
             if (elapsedTime < 60 * 60 * 1000) {
                 let newPassword = await bcrypt.hash(reqBody.newPassword, 10)
                 await this.userRepository.update({id: user.id}, {
                     password: newPassword,
                     OTP: null,
-                    OTPGenTime: null
+                    OTP_iat: null
                 });
                 return true
             } else {

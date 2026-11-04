@@ -6,58 +6,63 @@ import * as cors from 'cors';
 import * as http from "http";
 import {Server} from "socket.io";
 import {socketController} from "./controller/socket/socketController";
-import {RoomDetail} from "./entity/RoomDetail";
 import userService from "./service/userService";
+import { mountSwagger } from "./swagger";
 
 const hostname = '127.0.0.1';
-const port = 5000;
+const port = process.env.PORT || 5000;
 const FE_LOCAL_PORT = 3000;
 const FE_local = `http://localhost:${FE_LOCAL_PORT}`
 const FE_github = 'https://amurion97.github.io';
-const FE_netlify = 'https://giang-inc.netlify.app';
-const allowedDomains = [FE_local, FE_github, FE_netlify];
+export const FE_netlify_production = 'https://giangschool-quiz.netlify.app';
+const FE_netlify_dev = 'https://dev--giangschool-quiz.netlify.app';
+const allowedDomains = [FE_local, FE_github, FE_netlify_dev, FE_netlify_production];
 
 
-const corsFunction = (origin, callback) => {
+const corsOriginCheckFunction = (origin, callback) => {
     // bypass the requests with no origin (like curl requests, mobile apps, etc )
     if (!origin) return callback(null, true);
 
     if (allowedDomains.indexOf(origin) === -1) {
-        var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
+        let msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
         return callback(new Error(msg), false);
     }
     return callback(null, true);
 }
 
+const corsOptions = {
+    origin : corsOriginCheckFunction
+}
 // create express app
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
-    cors: {
-        origin: corsFunction
-    }
+    cors: corsOptions
 });
 
 //app options
-app.use(cors({
-    origin: corsFunction
-    // credentials: true
-}))
+app.use(cors(corsOptions))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+mountSwagger(app);
 app.use('', router);
 
 AppDataSource.initialize().then(async () => {
     //start listening after DB connect success
-    server.listen(port);
-
-    io.on('connection', socketController);
 
     await userService.resetAdmin();
-    await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
+    await userService.resetDefaultTeacher();
+    // await AppDataSource.getRepository(RoomDetail).update({}, {isOnline: false});
+
 
     let current = new Date(Date.now())
-    console.log(`${current.getHours()}:${current.getMinutes()} Express server has started on port ${port}. 
-    Open http://${hostname}:${port}/v1/questions to see results`)
+    server.listen(Number(port), () => {
+        console.log(`${current.getHours()}:${current.getMinutes()} 
+        UTC: ${current.toUTCString()} 
+        Express server has started on port ${port}. 
+        Open http://${hostname}:${port}/v1/questions to see results`)
+    });
+
+    io.on('connection', socketController);
 
 }).catch(error => console.log(error))
