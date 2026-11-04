@@ -46,7 +46,7 @@ class UserController {
     all = async (req: Request, res: Response) => {
         try {
             let users = await userService.findAll();
-            return ok(res, users, 201);
+            return ok(res, users);
         } catch (e) {
             console.log("error in get all user:", e)
             return fail(res, 500, 'error in get all user');
@@ -56,7 +56,10 @@ class UserController {
         try {
             let userId = req.params.id;
             let user = await userService.one(userId)
-            return ok(res, user, 201);
+            if (!user) {
+                return fail(res, 404, "User not found");
+            }
+            return ok(res, user);
         } catch (e) {
             console.log("error in showUser:", e)
             return fail(res, 500, 'error in showUser');
@@ -99,7 +102,7 @@ class UserController {
         try {
             let id = req.params.id;
             await userService.updateRoleOfUser(id)
-            return ok(res, "update role success", 201);
+            return ok(res, "update role success");
         } catch (e) {
             console.log("error in updateRoleOfUser:", e)
             return fail(res, 500, 'error in updateRoleOfUser');
@@ -134,7 +137,7 @@ class UserController {
             if (success) {
                 return ok(res, "OTP correct");
             } else {
-                return fail(res, 404, "OTP incorrect or expired");
+                return fail(res, 400, "OTP incorrect or expired");
             }
         } catch (e) {
             console.log("error while password reset:", e)
@@ -149,7 +152,7 @@ class UserController {
             if (success) {
                 return ok(res, "Password reset");
             } else {
-                return fail(res, 404, "OTP incorrect or expired");
+                return fail(res, 400, "OTP incorrect or expired");
             }
         } catch (e) {
             console.log("error while password reset:", e)
